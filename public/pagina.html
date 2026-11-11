@@ -359,7 +359,7 @@ function viewRearme(){
     if (difs.length) corpo = `<ul class="difs">${difs.map(d => d.dif < 0
       ? `<li class="falta">Falta${-d.dif > 1 ? 'm' : ''} ${-d.dif} · ${esc(nomeTipo(d.tipoId))}</li>`
       : `<li class="sobra">Sobra${d.dif > 1 ? 'm' : ''} ${d.dif} · ${esc(nomeTipo(d.tipoId))}</li>`).join('')}</ul>`;
-    else if (st === 'pendente') corpo = `<span class="small muted">${(s.itens || []).reduce((a, i) => a + i.qtd, 0)} peças previstas</span>`;
+    else if (st === 'pendente') corpo = `<span class="small muted">${((n) => n + (n === 1 ? ' peça prevista' : ' peças previstas'))((s.itens || []).reduce((a, i) => a + i.qtd, 0))}</span>`;
     else corpo = `<span class="small muted">${esc(reg.conferidaPor || '')} · ${fmtHora(reg.rearmadaEm || reg.conferidaEm)}</span>`;
     if (reg && reg.obs) corpo += `<span class="small muted">📝 ${esc(reg.obs)}</span>`;
     return `<button class="sala st-${st}" data-a="abrir-sala" data-id="${esc(s.id)}">
