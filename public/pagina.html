@@ -1,0 +1,676 @@
+<title>Rearme das Salas · Farmasi Arena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap">
+<style>
+/* Mesmo visual do calendário da arena e do checklist pré-show: barra vermelho-escura,
+   Onest, títulos em maiúsculas, cartões brancos arredondados e botões em pílula */
+:root{
+  --paper:#f6f5f3; --card:#ffffff; --ink:#0a0a0a; --muted:#717784; --line:#e6e8ec; --ghost:#d7dae1;
+  --band:#a10f12; --band-ink:#ffffff; --brand:#e11518; --brand-deep:#a10f12; --brand-light:#ed7374;
+  --ok:#15803d; --ok-bg:#e4f4ea; --no:#e11518; --no-bg:#fdecec; --warn:#b45309; --warn-bg:#fdf0da;
+  --chip:#eeece9; --focus:#ed7374;
+  --r-card:24px; --r-pill:999px; --r-field:12px;
+  --f:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+body{background:var(--paper);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
+*{box-sizing:border-box}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.band{position:sticky;top:env(safe-area-inset-top,0px);z-index:8;background:var(--band);color:var(--band-ink);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band-in{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px;min-height:64px;padding-block:10px}
+.mark{width:44px;height:44px;flex:none;display:block;border-radius:8px}
+.brand-t{font-size:16px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;line-height:1.1;white-space:nowrap}
+.brand-s{display:inline-block;margin-top:3px;font-size:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:var(--r-pill);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7)}
+.tabs{margin-left:auto;display:flex;gap:4px}
+.tab{background:transparent;border:0;color:rgba(255,255,255,.6);padding:8px 14px;border-radius:var(--r-pill);font-weight:500;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+.tab:hover{color:#fff;background:rgba(255,255,255,.1)}
+.tab[aria-current="page"]{color:#fff;background:rgba(255,255,255,.15)}
+
+main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 80px}
+.wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.wrap > .row > .fld{flex-basis:180px}
+h1,h2,h3{font-weight:500;margin:0;text-wrap:balance;text-transform:uppercase}
+h1{font-size:30px;line-height:1;letter-spacing:-.025em;overflow-wrap:anywhere}
+h2{font-size:12px;letter-spacing:.22em;color:var(--muted);display:inline-flex;align-items:center;gap:8px}
+h2::before{content:"";width:6px;height:6px;border-radius:var(--r-pill);background:var(--brand);flex:none}
+h3{font-size:14px;letter-spacing:.06em;display:flex;align-items:center;gap:8px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card)}
+.pad{padding:20px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.grow{flex:1 1 auto;min-width:0}
+.fld{display:flex;flex-direction:column;gap:8px;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);flex:1 1 180px;min-width:0}
+input[type=text],input[type=date],input[type=password],textarea,select{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-field);padding:11px 14px;font-size:15px;width:100%;min-width:0;text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink)}
+input:focus,textarea:focus,select:focus{border-color:var(--brand-light);outline:none}
+textarea{resize:vertical;min-height:70px}
+
+.btn{border:1px solid var(--line);background:var(--card);border-radius:var(--r-pill);padding:0 18px;font-weight:500;font-size:12px;letter-spacing:.05em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;transition:background .2s,color .2s,border-color .2s}
+.btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.pri:hover{background:var(--brand-deep);border-color:var(--brand-deep)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.danger{color:var(--no)}
+.btn.danger:hover{background:var(--no);color:#fff;border-color:var(--no)}
+.btn.wide{width:100%}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.link{background:none;border:none;padding:4px 0;color:var(--muted);font-weight:500;font-size:13px}
+.link:hover{color:var(--ink)}
+
+.chip{display:inline-block;font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:var(--r-pill);background:var(--chip);color:var(--muted);white-space:nowrap}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.chip.no{background:var(--no-bg);color:var(--no)}
+.chip b{color:var(--ink);font-weight:600}
+
+/* lista de rearmes */
+.lst{display:flex;flex-direction:column}
+.lst-i{display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center;padding:18px 20px;border:0;border-top:1px solid var(--line);background:none;text-align:left;width:100%}
+.lst-i:first-child{border-top:0}
+.lst-i:hover{background:var(--paper)}
+.lst-t{font-weight:500;font-size:18px;text-transform:uppercase;overflow-wrap:anywhere}
+.lst-m{font-size:13px;color:var(--muted)}
+.lst-p{grid-row:1 / span 2;grid-column:2;font-size:24px;font-weight:500;font-variant-numeric:tabular-nums}
+.bar{height:6px;background:var(--chip);border-radius:var(--r-pill);overflow:hidden;display:flex;grid-column:1 / -1}
+.bar i{display:block;height:100%}
+.b-ok{background:var(--ok)} .b-no{background:var(--no)}
+
+/* salas */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.sala{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--ghost);border-radius:var(--r-field);padding:14px 16px;width:100%}
+.sala:hover{border-color:var(--ink)}
+.sala.st-ok,.sala.st-rearmada{border-left-color:var(--ok)}
+.sala.st-divergente{border-left-color:var(--no);background:#fffafa}
+.sala-h{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.sala-t{font-weight:500;font-size:16px}
+.sala-c{font-size:12px;color:var(--muted)}
+.difs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;font-size:14px}
+.falta{color:var(--no);font-weight:500}
+.sobra{color:var(--warn);font-weight:500}
+
+/* conferência */
+.itens{display:flex;flex-direction:column;border-radius:var(--r-card);overflow:hidden}
+.it{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--line);border-left:4px solid transparent}
+.it:first-child{border-top:0}
+.it.d-falta{border-left-color:var(--no);background:var(--no-bg)}
+.it.d-sobra{border-left-color:var(--warn);background:var(--warn-bg)}
+.it-n{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.it-n b{font-weight:500;overflow-wrap:anywhere}
+.it-n span{font-size:13px;color:var(--muted)}
+.step{display:flex;align-items:center;gap:6px;flex:none}
+.step button{width:44px;height:44px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--card);font-size:20px;line-height:1}
+.step button:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.step output{min-width:32px;text-align:center;font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}
+.x{border:0;background:none;color:var(--muted);font-size:22px;width:32px;height:32px;flex:none}
+.x:hover{color:var(--no)}
+
+/* lista de rearme */
+.blk{display:flex;flex-direction:column;gap:8px}
+.blk ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.blk li{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-field);padding:10px 14px;font-size:15px}
+.blk li.feito{opacity:.5;text-decoration:line-through}
+.notice{border:1px solid rgba(180,83,9,.3);background:var(--warn-bg);padding:12px 16px;border-radius:var(--r-field);font-size:14px}
+.empty{padding:28px 20px;text-align:center;color:var(--muted)}
+.copybox textarea{min-height:200px;font-size:13px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:#fff;padding:12px 20px;border-radius:var(--r-pill);font-size:13px;font-weight:500;z-index:20;max-width:calc(100% - 32px)}
+.ro-tag{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+
+@media (max-width:560px){
+  .band-in{flex-wrap:wrap}
+  .tabs{margin-left:0;width:100%}
+  h1{font-size:24px}
+}
+@media print{
+  .band,.no-print,.toast{display:none!important}
+  body{background:#fff}
+  main{padding:0}
+  .panel{border:0}
+}
+</style>
+
+<header class="band">
+  <div class="band-in">
+    <img class="mark" alt="GL events" width="44" height="44" src="logo_gl.png">
+    <div class="grow">
+      <div class="brand-t">Farmasi Arena</div>
+      <div class="brand-s">Rearme das salas</div>
+    </div>
+    <nav class="tabs" id="tabs" hidden>
+      <button class="tab" data-a="go-lista" id="tab-lista">Rearmes</button>
+      <button class="tab" data-a="go-salas" id="tab-salas">Salas</button>
+    </nav>
+  </div>
+</header>
+<main><div class="wrap" id="app"><div class="panel empty">Carregando…</div></div></main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+const app = document.getElementById('app');
+const toastEl = document.getElementById('toast');
+
+const S = {
+  papel: null, pedirSenha: false, erro: '', carregou: false,
+  catalogo: { tipos: {}, salas: [] }, rearmes: {},
+  view: 'lista', rearmeId: null, salaId: null,
+  rasc: null,        // conferência em andamento: { itens: [{tipoId, previsto, qtd}], conferidaPor, obs }
+  ed: null,          // edição do previsto: { id, codigo, nome, grupo, itens: [{tipoId, qtd}], nova }
+  novo: false, copia: null, confirmar: null
+};
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+const fmtData = d => { if (!d) return ''; const [y, m, dd] = d.split('-'); return `${dd}/${m}/${y}`; };
+const fmtHora = iso => { if (!iso) return ''; const d = new Date(iso); return d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }); };
+const slug = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+const pode = min => ({ consulta: 1, equipe: 2, admin: 3 })[S.papel] >= ({ consulta: 1, equipe: 2, admin: 3 })[min];
+let toastT;
+function toast(msg){ toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => toastEl.hidden = true, 2800); }
+
+// ---------- servidor ----------
+async function api(metodo, url, corpo){
+  const r = await fetch(url, { method: metodo, headers: corpo ? { 'content-type': 'application/json' } : {}, body: corpo ? JSON.stringify(corpo) : undefined, credentials: 'same-origin', cache: 'no-store' });
+  if (r.status === 401 && url !== 'api/entrar') { S.pedirSenha = true; render(); throw { msg: 'Entre com a senha' }; }
+  const d = r.status === 204 ? null : await r.json().catch(() => null);
+  if (!r.ok) throw { msg: (d && d.erro) || 'Sem conexão com o servidor', status: r.status };
+  return d;
+}
+let gravando = 0, recarregarDepois = false;
+async function recarregar(){
+  if (gravando) { recarregarDepois = true; return; }
+  const d = await api('GET', 'api/dados');
+  S.catalogo = d.catalogo || { tipos: {}, salas: [] };
+  S.rearmes = d.rearmes || {};
+  S.papel = d.papel || null;
+  S.carregou = true; S.pedirSenha = false;
+  if (S.view !== 'lista' && S.view !== 'salas' && S.view !== 'salaEd' && !S.rearmes[S.rearmeId]) S.view = 'lista';
+  // não redesenha enquanto alguém digita (a mudança aparece no próximo toque)
+  const foco = document.activeElement;
+  if (foco && app.contains(foco) && /^(INPUT|TEXTAREA|SELECT)$/.test(foco.tagName)) return;
+  render();
+}
+async function gravar(metodo, url, corpo){
+  gravando++;
+  try { return await api(metodo, url, corpo); }
+  finally { gravando--; if (!gravando) { recarregarDepois = false; recarregar().catch(() => {}); } }
+}
+let aoVivo = false;
+function ligarAoVivo(){
+  if (aoVivo) return; aoVivo = true;
+  try { const es = new EventSource('api/eventos'); es.onmessage = () => recarregar().catch(() => {}); } catch (_) {}
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) recarregar().catch(() => {}); });
+  setInterval(() => { if (!document.hidden) recarregar().catch(() => {}); }, 60000);
+}
+// Link direto para um rearme (#r=<id>), para mandar ao outro setor já no evento certo
+let linkPronto = false;
+function abrirPeloLink(){
+  linkPronto = true;
+  const p = new URLSearchParams(location.hash.slice(1));
+  const r = p.get('r');
+  if (!r || !S.rearmes[r]) return;
+  S.rearmeId = r; S.view = 'rearme';
+  const s = p.get('s');
+  if (s && salaPorId(s)) abrirSala(s); else render();
+}
+window.addEventListener('hashchange', () => { if (S.carregou) abrirPeloLink(); });
+function marcarLink(){
+  if (!linkPronto) return;
+  const h = S.view === 'rearme' || S.view === 'sala' ? '#r=' + S.rearmeId : '';
+  if (location.hash !== h) history.replaceState(null, '', h || location.pathname);
+}
+function iniciar(){
+  recarregar().then(() => { ligarAoVivo(); abrirPeloLink(); }, e => { if (!S.pedirSenha) { S.erro = 'Não foi possível falar com o servidor. Verifique a internet e recarregue a página.'; render(); } });
+}
+
+// ---------- regras ----------
+const nomeTipo = id => (S.catalogo.tipos[id] && S.catalogo.tipos[id].nome) || id;
+const salaPorId = id => S.catalogo.salas.find(s => s.id === id);
+const codigo = id => { const s = salaPorId(id); return s ? s.codigo : id; };
+function previsto(sala){ const o = {}; (sala.itens || []).forEach(i => { o[i.tipoId] = (o[i.tipoId] || 0) + i.qtd; }); return o; }
+
+function diferencas(prev, cont){
+  const ids = [...Object.keys(prev || {})];
+  Object.keys(cont || {}).forEach(id => { if (!ids.includes(id)) ids.push(id); });
+  const out = [];
+  ids.forEach(id => {
+    const p = Number((prev || {})[id]) || 0;
+    const c = cont && cont[id] !== undefined && cont[id] !== null ? Number(cont[id]) || 0 : p;
+    if (c !== p) out.push({ tipoId: id, previsto: p, contado: c, dif: c - p });
+  });
+  return out;
+}
+
+// A sobra de uma sala cobre a falta de outra (mesmo item) antes de ir ao depósito.
+//   prevPorSala: { salaId: { tipoId: qtd } }   contagens: [[salaId, { tipoId: qtd }], ...]
+function calcularPlano(prevPorSala, contagens){
+  const porTipo = {}, ordem = [];
+  contagens.forEach(([salaId, cont]) => {
+    diferencas(prevPorSala[salaId] || {}, cont || {}).forEach(d => {
+      if (!porTipo[d.tipoId]) { porTipo[d.tipoId] = { faltas: [], sobras: [] }; ordem.push(d.tipoId); }
+      if (d.dif < 0) porTipo[d.tipoId].faltas.push({ salaId, qtd: -d.dif });
+      else porTipo[d.tipoId].sobras.push({ salaId, qtd: d.dif });
+    });
+  });
+  const remanejar = [], buscar = [], devolver = [];
+  ordem.forEach(tipoId => {
+    const faltas = porTipo[tipoId].faltas.map(x => ({ ...x })), sobras = porTipo[tipoId].sobras.map(x => ({ ...x }));
+    let i = 0, j = 0;
+    while (i < sobras.length && j < faltas.length) {
+      const n = Math.min(sobras[i].qtd, faltas[j].qtd);
+      remanejar.push({ tipoId, de: sobras[i].salaId, para: faltas[j].salaId, qtd: n });
+      sobras[i].qtd -= n; faltas[j].qtd -= n;
+      if (!sobras[i].qtd) i++;
+      if (!faltas[j].qtd) j++;
+    }
+    faltas.slice(j).forEach(f => { if (f.qtd > 0) buscar.push({ tipoId, para: f.salaId, qtd: f.qtd }); });
+    sobras.slice(i).forEach(s => { if (s.qtd > 0) devolver.push({ tipoId, de: s.salaId, qtd: s.qtd }); });
+  });
+  return { remanejar, buscar, devolver };
+}
+window.calcularPlano = calcularPlano;
+
+function statusSala(sala, reg){
+  if (!reg || !reg.conferidaEm) return 'pendente';
+  if (reg.rearmadaEm) return 'rearmada';
+  return diferencas(previsto(sala), reg.contagem).length ? 'divergente' : 'ok';
+}
+function resumo(r){
+  const c = { total: S.catalogo.salas.length, pendente: 0, ok: 0, divergente: 0, rearmada: 0 };
+  S.catalogo.salas.forEach(s => { c[statusSala(s, (r.salas || {})[s.id])]++; });
+  c.conferidas = c.total - c.pendente;
+  return c;
+}
+function planoDe(r){
+  const prev = {}, conts = [];
+  S.catalogo.salas.forEach(s => {
+    prev[s.id] = previsto(s);
+    const reg = (r.salas || {})[s.id];
+    if (reg && reg.conferidaEm) conts.push([s.id, reg.contagem || {}]);
+  });
+  return calcularPlano(prev, conts);
+}
+const plural = (n, um, varios) => n === 1 ? um : varios;
+
+// ---------- telas ----------
+function render(){
+  lerCampos();
+  document.getElementById('tabs').hidden = !S.carregou || S.pedirSenha;
+  document.getElementById('tab-lista').setAttribute('aria-current', ['lista', 'rearme', 'sala'].includes(S.view) ? 'page' : 'false');
+  document.getElementById('tab-salas').setAttribute('aria-current', ['salas', 'salaEd'].includes(S.view) ? 'page' : 'false');
+  if (S.pedirSenha) { app.innerHTML = viewSenha(); return; }
+  if (S.erro) { app.innerHTML = `<div class="panel empty">${esc(S.erro)}</div>`; return; }
+  if (!S.carregou) { app.innerHTML = `<div class="panel empty">Carregando…</div>`; return; }
+  const v = { lista: viewLista, rearme: viewRearme, sala: viewSala, salas: viewSalas, salaEd: viewSalaEd }[S.view] || viewLista;
+  app.innerHTML = v();
+  marcarLink();
+}
+
+function viewSenha(){
+  return `<section class="panel pad" style="max-width:440px;margin:24px auto;display:flex;flex-direction:column;gap:12px">
+    <h2>Entrar</h2>
+    <p class="muted" style="margin:0">Digite a senha que você recebeu.</p>
+    <form id="f-senha" class="row" style="align-items:flex-end">
+      <label class="fld">Senha<input type="password" id="senha" autocomplete="current-password" required></label>
+      <button class="btn pri" type="submit">Entrar</button>
+    </form>
+  </section>`;
+}
+
+function viewLista(){
+  const lista = Object.values(S.rearmes).sort((a, b) => (b.criadoEm || 0) - (a.criadoEm || 0));
+  const novo = S.novo ? `<form class="panel pad" id="f-novo" style="display:flex;flex-direction:column;gap:12px">
+      <h2>Novo rearme</h2>
+      <div class="row">
+        <label class="fld">Evento<input type="text" id="novo-nome" placeholder="Ex: Mariah Carey" maxlength="120" required></label>
+        <label class="fld" style="flex:0 1 180px">Data do evento<input type="date" id="novo-data"></label>
+      </div>
+      <div class="row"><button class="btn pri" type="submit">Criar</button><button class="btn" type="button" data-a="cancelar-novo">Cancelar</button></div>
+    </form>` : '';
+  const itens = lista.map(r => {
+    const c = resumo(r);
+    const pct = c.total ? Math.round(c.conferidas / c.total * 100) : 0;
+    return `<button class="lst-i" data-a="abrir-rearme" data-id="${esc(r.id)}">
+      <span class="lst-t">${esc(r.nome)}</span>
+      <span class="lst-p">${c.conferidas}/${c.total}</span>
+      <span class="lst-m">${r.data ? fmtData(r.data) + ' · ' : ''}${c.divergente} com diferença · ${c.rearmada} ${plural(c.rearmada, 'rearmada', 'rearmadas')}</span>
+      <span class="bar"><i class="b-ok" style="width:${c.total ? (c.ok + c.rearmada) / c.total * 100 : 0}%"></i><i class="b-no" style="width:${c.total ? c.divergente / c.total * 100 : 0}%"></i></span>
+    </button>`;
+  }).join('');
+  return `<div class="row"><h1 class="grow">Rearmes</h1>${pode('equipe') && !S.novo ? `<button class="btn pri" data-a="novo">+ Novo rearme</button>` : ''}</div>
+    <p class="muted" style="margin:0">Depois de cada evento, confira as salas. O sistema compara com o previsto e monta a lista do que buscar, remanejar e devolver.</p>
+    ${novo}
+    <section class="panel">${itens ? `<div class="lst">${itens}</div>` : `<div class="empty">Nenhum rearme ainda.${pode('equipe') ? ' Toque em "Novo rearme" depois do evento.' : ''}</div>`}</section>`;
+}
+
+function viewRearme(){
+  const r = S.rearmes[S.rearmeId];
+  const c = resumo(r);
+  const cards = S.catalogo.salas.map(s => {
+    const reg = (r.salas || {})[s.id];
+    const st = statusSala(s, reg);
+    const difs = st === 'divergente' ? diferencas(previsto(s), reg.contagem) : [];
+    const chip = { pendente: '<span class="chip">A conferir</span>', ok: '<span class="chip ok">Tudo certo</span>',
+      rearmada: '<span class="chip ok">Rearmada ✓</span>', divergente: `<span class="chip no">${difs.length} ${plural(difs.length, 'diferença', 'diferenças')}</span>` }[st];
+    let corpo = '';
+    if (difs.length) corpo = `<ul class="difs">${difs.map(d => d.dif < 0
+      ? `<li class="falta">Falta${-d.dif > 1 ? 'm' : ''} ${-d.dif} · ${esc(nomeTipo(d.tipoId))}</li>`
+      : `<li class="sobra">Sobra${d.dif > 1 ? 'm' : ''} ${d.dif} · ${esc(nomeTipo(d.tipoId))}</li>`).join('')}</ul>`;
+    else if (st === 'pendente') corpo = `<span class="small muted">${(s.itens || []).reduce((a, i) => a + i.qtd, 0)} peças previstas</span>`;
+    else corpo = `<span class="small muted">${esc(reg.conferidaPor || '')} · ${fmtHora(reg.rearmadaEm || reg.conferidaEm)}</span>`;
+    if (reg && reg.obs) corpo += `<span class="small muted">📝 ${esc(reg.obs)}</span>`;
+    return `<button class="sala st-${st}" data-a="abrir-sala" data-id="${esc(s.id)}">
+      <span class="sala-h"><span><span class="sala-t">${esc(s.codigo)}</span><br><span class="sala-c">${esc(s.nome)}</span></span>${chip}</span>
+      ${corpo}
+    </button>`;
+  }).join('');
+  const conf = S.confirmar === 'apagar-rearme'
+    ? `<div class="notice no-print">Apagar o rearme "${esc(r.nome)}" e todas as conferências dele? <button class="btn danger" data-a="apagar-rearme-sim">Apagar</button> <button class="btn" data-a="cancelar-conf">Cancelar</button></div>` : '';
+  return `<div class="no-print"><button class="link" data-a="go-lista">← Rearmes</button></div>
+    <div class="row"><h1 class="grow">${esc(r.nome)}</h1>${r.data ? `<span class="chip">${fmtData(r.data)}</span>` : ''}</div>
+    <div class="row">
+      <span class="chip"><b>${c.conferidas}</b> de ${c.total} conferidas</span>
+      <span class="chip"><b>${c.divergente}</b> com diferença</span>
+      <span class="chip"><b>${c.rearmada}</b> ${plural(c.rearmada, 'rearmada', 'rearmadas')}</span>
+    </div>
+    <section class="no-print" style="display:flex;flex-direction:column;gap:10px">
+      <h2>Salas ${pode('equipe') ? '· toque para conferir' : ''}</h2>
+      <div class="grid">${cards}</div>
+    </section>
+    <section class="panel pad" style="display:flex;flex-direction:column;gap:16px">
+      <div class="row"><h2 class="grow">Lista de rearme</h2>
+        <span class="row no-print"><button class="btn" data-a="copiar">Copiar para WhatsApp</button><button class="btn" data-a="imprimir">Imprimir</button></span>
+      </div>
+      ${S.copia !== null ? `<div class="copybox no-print" style="display:flex;flex-direction:column;gap:8px"><textarea id="copia" readonly>${esc(S.copia)}</textarea><div class="row"><button class="btn pri" data-a="copiar-de-novo">Copiar</button><button class="btn" data-a="fechar-copia">Fechar</button></div></div>` : ''}
+      ${htmlLista(r, c)}
+    </section>
+    ${pode('admin') ? `<div class="no-print">${conf || `<button class="btn danger" data-a="apagar-rearme">Apagar este rearme</button>`}</div>` : ''}`;
+}
+
+function htmlLista(r, c){
+  if (!c.conferidas) return `<div class="empty">A lista aparece aqui conforme as salas forem conferidas.</div>`;
+  const plano = planoDe(r);
+  const regs = r.salas || {};
+  const rearmada = id => !!(regs[id] && regs[id].rearmadaEm);
+  let h = '';
+  const pend = S.catalogo.salas.filter(s => !(regs[s.id] && regs[s.id].conferidaEm)).map(s => s.codigo);
+  if (pend.length) h += `<div class="notice">⚠️ Ainda falta conferir: <b>${pend.map(esc).join(', ')}</b>. A lista pode mudar.</div>`;
+  if (!plano.buscar.length && !plano.remanejar.length && !plano.devolver.length) {
+    h += `<div class="empty">🎉 As salas conferidas estão iguais ao previsto. Nada a rearmar.</div>`;
+  } else {
+    if (plano.buscar.length) {
+      const g = {}; plano.buscar.forEach(b => (g[b.tipoId] = g[b.tipoId] || []).push(b));
+      h += `<div class="blk"><h3>📦 Buscar no depósito</h3><ul>${Object.keys(g).map(t => {
+        const l = g[t], tot = l.reduce((a, b) => a + b.qtd, 0);
+        return `<li class="${l.every(b => rearmada(b.para)) ? 'feito' : ''}"><b>${tot} ${esc(nomeTipo(t))}</b> → ${l.map(b => `${esc(codigo(b.para))} (${b.qtd})`).join(', ')}</li>`;
+      }).join('')}</ul></div>`;
+    }
+    if (plano.remanejar.length) h += `<div class="blk"><h3>🔁 Remanejar entre salas</h3><ul>${plano.remanejar.map(m =>
+      `<li class="${rearmada(m.de) && rearmada(m.para) ? 'feito' : ''}"><b>${m.qtd} ${esc(nomeTipo(m.tipoId))}</b>: ${esc(codigo(m.de))} → ${esc(codigo(m.para))}</li>`).join('')}</ul></div>`;
+    if (plano.devolver.length) h += `<div class="blk"><h3>↩️ Levar ao depósito (sobrando)</h3><ul>${plano.devolver.map(d =>
+      `<li class="${rearmada(d.de) ? 'feito' : ''}"><b>${d.qtd} ${esc(nomeTipo(d.tipoId))}</b> da ${esc(codigo(d.de))}</li>`).join('')}</ul></div>`;
+  }
+  const obs = S.catalogo.salas.filter(s => regs[s.id] && regs[s.id].obs);
+  if (obs.length) h += `<div class="blk"><h3>📝 Observações</h3><ul>${obs.map(s => `<li><b>${esc(s.codigo)}</b>: ${esc(regs[s.id].obs)}</li>`).join('')}</ul></div>`;
+  return h;
+}
+
+function textoWhatsApp(r){
+  const regs = r.salas || {};
+  const plano = planoDe(r);
+  let t = `🛋️ *REARME DAS SALAS*\n${r.nome}${r.data ? ' · ' + fmtData(r.data) : ''}\n`;
+  const pend = S.catalogo.salas.filter(s => !(regs[s.id] && regs[s.id].conferidaEm)).map(s => s.codigo);
+  if (pend.length) t += `⚠️ Falta conferir: ${pend.join(', ')}\n`;
+  if (plano.buscar.length) {
+    const g = {}; plano.buscar.forEach(b => (g[b.tipoId] = g[b.tipoId] || []).push(b));
+    t += `\n📦 *Buscar no depósito*\n` + Object.keys(g).map(k => `• ${g[k].reduce((a, b) => a + b.qtd, 0)} ${nomeTipo(k)} → ${g[k].map(b => `${codigo(b.para)} (${b.qtd})`).join(', ')}`).join('\n') + '\n';
+  }
+  if (plano.remanejar.length) t += `\n🔁 *Remanejar entre salas*\n` + plano.remanejar.map(m => `• ${m.qtd} ${nomeTipo(m.tipoId)}: ${codigo(m.de)} → ${codigo(m.para)}`).join('\n') + '\n';
+  if (plano.devolver.length) t += `\n↩️ *Levar ao depósito*\n` + plano.devolver.map(d => `• ${d.qtd} ${nomeTipo(d.tipoId)} da ${codigo(d.de)}`).join('\n') + '\n';
+  if (!plano.buscar.length && !plano.remanejar.length && !plano.devolver.length) t += `\n✅ Salas conferidas iguais ao previsto.\n`;
+  const obs = S.catalogo.salas.filter(s => regs[s.id] && regs[s.id].obs);
+  if (obs.length) t += `\n📝 *Observações*\n` + obs.map(s => `• ${s.codigo}: ${regs[s.id].obs}`).join('\n') + '\n';
+  return t;
+}
+
+function viewSala(){
+  const r = S.rearmes[S.rearmeId], sala = salaPorId(S.salaId);
+  if (!sala) { S.view = 'rearme'; return viewRearme(); }
+  const reg = (r.salas || {})[sala.id];
+  const so = !pode('equipe');
+  const R = S.rasc;
+  const linhas = R.itens.map(i => {
+    const d = i.qtd - i.previsto;
+    const cls = d < 0 ? 'd-falta' : d > 0 ? 'd-sobra' : '';
+    const sub = i.previsto === 0 ? 'Não é desta sala' : `Previsto: ${i.previsto}`;
+    const difTxt = d < 0 ? ` · <span class="falta">Falta${-d > 1 ? 'm' : ''} ${-d}</span>` : d > 0 ? ` · <span class="sobra">Sobra${d > 1 ? 'm' : ''} ${d}</span>` : '';
+    return `<div class="it ${cls}" data-tipo="${esc(i.tipoId)}">
+      <span class="it-n"><b>${esc(nomeTipo(i.tipoId))}</b><span>${sub}${difTxt}</span></span>
+      ${so ? `<span class="step"><output>${i.qtd}</output></span>` : `<span class="step"><button data-a="menos" aria-label="Diminuir">−</button><output>${i.qtd}</output><button data-a="mais" aria-label="Aumentar">+</button></span>`}
+      ${!so && i.previsto === 0 ? `<button class="x" data-a="remover-item" aria-label="Remover">×</button>` : ''}
+    </div>`;
+  }).join('');
+  const naLista = new Set(R.itens.map(i => i.tipoId));
+  const opcoes = Object.values(S.catalogo.tipos).filter(t => !naLista.has(t.id)).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  const conf = S.confirmar === 'apagar-conf' ? `<div class="notice">Apagar a conferência da ${esc(sala.codigo)}? Ela volta para "A conferir". <button class="btn danger" data-a="apagar-conf-sim">Apagar</button> <button class="btn" data-a="cancelar-conf">Cancelar</button></div>` : '';
+  return `<div><button class="link" data-a="voltar-rearme">← ${esc(r.nome)}</button></div>
+    <div class="row"><h1 class="grow">${esc(sala.codigo)}</h1><span class="chip">${esc(sala.nome)}</span></div>
+    ${so ? '' : `<p class="muted" style="margin:0">Conte o que está na sala agora. A lista já vem com o previsto: só ajuste o que estiver diferente.</p>
+    <button class="btn ok wide" data-a="tudo-certo">✓ Está tudo igual ao previsto</button>`}
+    <section class="panel"><div class="itens">${linhas}</div></section>
+    ${so ? '' : `<div class="row">
+      <select id="add-tipo" class="grow" style="flex:1 1 200px"><option value="">Item a mais na sala…</option>${opcoes.map(t => `<option value="${esc(t.id)}">${esc(t.nome)}</option>`).join('')}</select>
+      <button class="btn" data-a="add-item">+ Adicionar</button>
+    </div>
+    <div class="row">
+      <label class="fld">Quem conferiu<input type="text" id="conferente" maxlength="80" value="${esc(R.conferidaPor)}" autocomplete="name"></label>
+    </div>
+    <label class="fld" style="flex:none">Observação (opcional)<textarea id="obs" maxlength="1000" placeholder="Ex: espelho trincado, sofá manchado">${esc(R.obs)}</textarea></label>
+    <div class="row"><button class="btn pri" data-a="salvar-conf" style="flex:2 1 200px">Salvar conferência</button><button class="btn" data-a="voltar-rearme" style="flex:1 1 120px">Cancelar</button></div>`}
+    ${reg && reg.conferidaEm ? `<section class="panel pad" style="display:flex;flex-direction:column;gap:10px">
+      <span class="small muted">Conferida por ${esc(reg.conferidaPor)} em ${fmtHora(reg.conferidaEm)}${reg.rearmadaEm ? ` · rearmada em ${fmtHora(reg.rearmadaEm)}` : ''}</span>
+      ${so ? '' : (reg.rearmadaEm
+        ? `<button class="btn" data-a="desmarcar">Desfazer "rearmada"</button>`
+        : `<button class="btn ok" data-a="marcar">✓ Marcar sala como rearmada</button>`)}
+      ${so ? '' : (conf || `<button class="btn danger" data-a="apagar-conf">Apagar a conferência desta sala</button>`)}
+    </section>` : ''}`;
+}
+
+function viewSalas(){
+  const total = S.catalogo.salas.reduce((a, s) => a + s.itens.reduce((b, i) => b + i.qtd, 0), 0);
+  const cards = S.catalogo.salas.map(s => `<div class="panel pad" style="display:flex;flex-direction:column;gap:8px">
+      <div class="sala-h"><span><span class="sala-t">${esc(s.codigo)}</span><br><span class="sala-c">${esc(s.nome)}</span></span>
+      ${pode('admin') ? `<button class="btn" data-a="editar-sala" data-id="${esc(s.id)}">Editar</button>` : ''}</div>
+      <ul class="difs">${s.itens.map(i => `<li>${i.qtd} · ${esc(nomeTipo(i.tipoId))}</li>`).join('')}</ul>
+    </div>`).join('');
+  return `<div class="row"><h1 class="grow">Salas</h1>${pode('admin') ? `<button class="btn pri" data-a="nova-sala">+ Nova sala</button>` : ''}</div>
+    <p class="muted" style="margin:0">O que cada sala deve ter. ${S.catalogo.salas.length} salas, ${total} peças.${S.catalogo.origem ? ` Base: ${esc(S.catalogo.origem)}.` : ''}${pode('admin') ? '' : ' Só o administrador muda o previsto.'}</p>
+    <div class="grid">${cards}</div>`;
+}
+
+function viewSalaEd(){
+  const E = S.ed;
+  const linhas = E.itens.map(i => `<div class="it" data-tipo="${esc(i.tipoId)}">
+      <span class="it-n"><b>${esc(nomeTipo(i.tipoId))}</b></span>
+      <span class="step"><button data-a="ed-menos" aria-label="Diminuir">−</button><output>${i.qtd}</output><button data-a="ed-mais" aria-label="Aumentar">+</button></span>
+      <button class="x" data-a="ed-remover" aria-label="Remover">×</button>
+    </div>`).join('');
+  const conf = S.confirmar === 'apagar-sala' ? `<div class="notice">Tirar a ${esc(E.codigo)} do sistema? Ela some de todos os rearmes. <button class="btn danger" data-a="apagar-sala-sim">Tirar</button> <button class="btn" data-a="cancelar-conf">Cancelar</button></div>` : '';
+  return `<div><button class="link" data-a="go-salas">← Salas</button></div>
+    <h1>${E.nova ? 'Nova sala' : 'Editar ' + esc(E.codigo)}</h1>
+    <p class="muted" style="margin:0">Isto muda o que a sala deve ter em todos os rearmes, inclusive nos que estão abertos.</p>
+    <div class="row">
+      <label class="fld" style="flex:0 1 140px">Código<input type="text" id="ed-codigo" maxlength="20" value="${esc(E.codigo)}" placeholder="C-07"></label>
+      <label class="fld">Nome<input type="text" id="ed-nome" maxlength="80" value="${esc(E.nome)}" placeholder="Camarim 07"></label>
+    </div>
+    <section class="panel"><div class="itens">${linhas || `<div class="empty">Nenhum item ainda.</div>`}</div></section>
+    <div class="row">
+      <input type="text" id="ed-add" list="tipos" placeholder="Item (ex: Banqueta)" maxlength="80" style="flex:1 1 200px">
+      <datalist id="tipos">${Object.values(S.catalogo.tipos).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map(t => `<option value="${esc(t.nome)}">`).join('')}</datalist>
+      <button class="btn" data-a="ed-add">+ Adicionar</button>
+    </div>
+    <div class="row"><button class="btn pri" data-a="ed-salvar" style="flex:2 1 200px">Salvar</button><button class="btn" data-a="go-salas" style="flex:1 1 120px">Cancelar</button></div>
+    ${E.nova ? '' : (conf || `<div><button class="btn danger" data-a="apagar-sala">Tirar esta sala do sistema</button></div>`)}`;
+}
+
+// ---------- ações ----------
+function abrirSala(id){
+  const r = S.rearmes[S.rearmeId], sala = salaPorId(id);
+  const reg = (r.salas || {})[id];
+  const itens = sala.itens.map(i => ({ tipoId: i.tipoId, previsto: i.qtd, qtd: reg && reg.contagem && reg.contagem[i.tipoId] !== undefined ? reg.contagem[i.tipoId] : i.qtd }));
+  if (reg && reg.contagem) Object.keys(reg.contagem).forEach(t => { if (!itens.some(i => i.tipoId === t)) itens.push({ tipoId: t, previsto: 0, qtd: reg.contagem[t] }); });
+  let nome = ''; try { nome = localStorage.getItem('rearme_conferente') || ''; } catch (_) {}
+  S.rasc = { itens, conferidaPor: (reg && reg.conferidaPor) || nome, obs: (reg && reg.obs) || '' };
+  S.salaId = id; S.view = 'sala'; S.confirmar = null;
+  render(); window.scrollTo(0, 0);
+}
+function lerCampos(){
+  const c = document.getElementById('conferente'), o = document.getElementById('obs');
+  if (S.rasc && c) S.rasc.conferidaPor = c.value;
+  if (S.rasc && o) S.rasc.obs = o.value;
+  const ec = document.getElementById('ed-codigo'), en = document.getElementById('ed-nome');
+  if (S.ed && ec) S.ed.codigo = ec.value;
+  if (S.ed && en) S.ed.nome = en.value;
+}
+const urlSala = () => `api/rearmes/${encodeURIComponent(S.rearmeId)}/salas/${encodeURIComponent(S.salaId)}`;
+
+function salvarCatalogo(novo, msg){
+  return gravar('PUT', 'api/catalogo', novo).then(() => { S.catalogo = novo; S.ed = null; S.view = 'salas'; render(); toast(msg); }, e => toast(e.msg));
+}
+
+app.addEventListener('submit', ev => {
+  ev.preventDefault();
+  if (ev.target.id === 'f-senha') {
+    api('POST', 'api/entrar', { senha: document.getElementById('senha').value })
+      .then(() => { S.pedirSenha = false; iniciar(); }, e => toast(e.status === 401 ? 'Senha errada' : e.msg));
+  }
+  if (ev.target.id === 'f-novo') {
+    const nome = document.getElementById('novo-nome').value.trim(), data = document.getElementById('novo-data').value;
+    if (!nome) return toast('Informe o nome do evento');
+    gravar('POST', 'api/rearmes', { nome, data }).then(d => { S.novo = false; S.rearmeId = d.id; S.view = 'rearme'; S.rearmes[d.id] = { id: d.id, nome, data, criadoEm: Date.now(), salas: {} }; render(); }, e => toast(e.msg));
+  }
+});
+
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-a]');
+  if (!b) return;
+  lerCampos();
+  const a = b.dataset.a;
+  const R = S.rasc, E = S.ed;
+  const linha = b.closest('[data-tipo]');
+  const tipo = linha && linha.dataset.tipo;
+  switch (a) {
+    case 'go-lista': S.view = 'lista'; S.copia = null; S.confirmar = null; break;
+    case 'go-salas': S.view = 'salas'; S.ed = null; S.confirmar = null; break;
+    case 'novo': S.novo = true; render(); document.getElementById('novo-nome').focus(); return;
+    case 'cancelar-novo': S.novo = false; break;
+    case 'abrir-rearme': S.rearmeId = b.dataset.id; S.view = 'rearme'; S.copia = null; S.confirmar = null; render(); window.scrollTo(0, 0); return;
+    case 'voltar-rearme': S.view = 'rearme'; S.rasc = null; S.confirmar = null; break;
+    case 'abrir-sala': return abrirSala(b.dataset.id);
+    case 'menos': { const i = R.itens.find(x => x.tipoId === tipo); i.qtd = Math.max(0, i.qtd - 1); break; }
+    case 'mais': { const i = R.itens.find(x => x.tipoId === tipo); i.qtd = Math.min(999, i.qtd + 1); break; }
+    case 'remover-item': R.itens = R.itens.filter(x => x.tipoId !== tipo); break;
+    case 'tudo-certo': R.itens = R.itens.filter(x => x.previsto > 0); R.itens.forEach(x => { x.qtd = x.previsto; }); break;
+    case 'add-item': {
+      const t = document.getElementById('add-tipo').value;
+      if (!t) return toast('Escolha o item na lista');
+      R.itens.push({ tipoId: t, previsto: 0, qtd: 1 }); break;
+    }
+    case 'salvar-conf': {
+      const quem = (R.conferidaPor || '').trim();
+      if (!quem) { toast('Informe quem conferiu'); document.getElementById('conferente').focus(); return; }
+      try { localStorage.setItem('rearme_conferente', quem); } catch (_) {}
+      const contagem = {};
+      R.itens.forEach(i => { if (i.previsto > 0 || i.qtd > 0) contagem[i.tipoId] = i.qtd; });
+      const ant = (S.rearmes[S.rearmeId].salas || {})[S.salaId];
+      const sala = salaPorId(S.salaId);
+      const iguais = diferencas(previsto(sala), contagem).length === 0;
+      const reg = { contagem, obs: (R.obs || '').trim(), conferidaPor: quem, conferidaEm: new Date().toISOString() };
+      // conferir de novo uma sala já rearmada mantém a marcação só se continuar tudo certo
+      if (ant && ant.rearmadaEm && iguais) reg.rearmadaEm = ant.rearmadaEm;
+      const rr = S.rearmes[S.rearmeId]; rr.salas = rr.salas || {}; rr.salas[S.salaId] = reg;
+      gravar('PUT', urlSala(), reg).then(() => toast(iguais ? `${sala.codigo}: tudo certo!` : `${sala.codigo} salva. Diferenças na lista de rearme.`), e => toast(e.msg));
+      S.view = 'rearme'; S.rasc = null; render(); window.scrollTo(0, 0); return;
+    }
+    case 'marcar': case 'desmarcar': {
+      const reg = clone(S.rearmes[S.rearmeId].salas[S.salaId]);
+      if (a === 'marcar') reg.rearmadaEm = new Date().toISOString(); else delete reg.rearmadaEm;
+      S.rearmes[S.rearmeId].salas[S.salaId] = reg;
+      gravar('PUT', urlSala(), reg).then(() => toast(a === 'marcar' ? `${codigo(S.salaId)} rearmada!` : 'Marcação desfeita'), e => toast(e.msg));
+      if (a === 'marcar') { S.view = 'rearme'; S.rasc = null; }
+      break;
+    }
+    case 'apagar-conf': S.confirmar = 'apagar-conf'; break;
+    case 'apagar-conf-sim':
+      delete S.rearmes[S.rearmeId].salas[S.salaId];
+      gravar('DELETE', urlSala()).catch(e => toast(e.msg));
+      S.view = 'rearme'; S.rasc = null; S.confirmar = null; break;
+    case 'cancelar-conf': S.confirmar = null; break;
+    case 'apagar-rearme': S.confirmar = 'apagar-rearme'; break;
+    case 'apagar-rearme-sim': {
+      const id = S.rearmeId; delete S.rearmes[id];
+      gravar('DELETE', 'api/rearmes/' + encodeURIComponent(id)).then(() => toast('Rearme apagado'), e => toast(e.msg));
+      S.view = 'lista'; S.confirmar = null; break;
+    }
+    case 'copiar': {
+      const txt = textoWhatsApp(S.rearmes[S.rearmeId]);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(() => toast('Lista copiada! É só colar no WhatsApp.'), () => { S.copia = txt; render(); });
+        return;
+      }
+      S.copia = txt; break;
+    }
+    case 'copiar-de-novo': { const t = document.getElementById('copia'); t.select(); try { document.execCommand('copy'); toast('Copiado!'); } catch (_) { toast('Selecione o texto e copie'); } return; }
+    case 'fechar-copia': S.copia = null; break;
+    case 'imprimir': window.print(); return;
+    // edição do previsto
+    case 'editar-sala': { const s = salaPorId(b.dataset.id); S.ed = { ...clone(s), nova: false }; S.view = 'salaEd'; S.confirmar = null; render(); window.scrollTo(0, 0); return; }
+    case 'nova-sala': S.ed = { id: '', codigo: '', nome: '', grupo: '', itens: [], nova: true }; S.view = 'salaEd'; S.confirmar = null; render(); window.scrollTo(0, 0); return;
+    case 'ed-menos': { const i = E.itens.find(x => x.tipoId === tipo); i.qtd = Math.max(1, i.qtd - 1); break; }
+    case 'ed-mais': { const i = E.itens.find(x => x.tipoId === tipo); i.qtd = Math.min(999, i.qtd + 1); break; }
+    case 'ed-remover': E.itens = E.itens.filter(x => x.tipoId !== tipo); break;
+    case 'ed-add': {
+      const nome = document.getElementById('ed-add').value.trim();
+      if (!nome) return toast('Escreva o nome do item');
+      let t = Object.values(S.catalogo.tipos).find(x => slug(x.nome) === slug(nome));
+      if (!t) {
+        // item novo: entra na lista da arena quando a sala for salva
+        const id = slug(nome);
+        if (!id) return toast('Nome inválido');
+        t = { id, nome };
+        E.novosTipos = E.novosTipos || {}; E.novosTipos[id] = t;
+        S.catalogo.tipos = { ...S.catalogo.tipos, [id]: t };
+      }
+      if (E.itens.some(x => x.tipoId === t.id)) return toast('Esse item já está na lista');
+      E.itens.push({ tipoId: t.id, qtd: 1 }); break;
+    }
+    case 'ed-salvar': {
+      const cod = (E.codigo || '').trim(), nome = (E.nome || '').trim();
+      if (!cod || !nome) return toast('Preencha o código e o nome da sala');
+      if (!E.itens.length) return toast('Adicione pelo menos um item');
+      const novo = clone(S.catalogo);
+      novo.tipos = { ...novo.tipos, ...(E.novosTipos || {}) };
+      const id = E.nova ? slug(cod) : E.id;
+      if (!id) return toast('Código inválido');
+      if (E.nova && novo.salas.some(s => s.id === id)) return toast('Já existe uma sala com esse código');
+      const sala = { id, codigo: cod, nome, grupo: E.grupo || '', itens: E.itens.map(i => ({ tipoId: i.tipoId, qtd: i.qtd })) };
+      if (E.nova) novo.salas.push(sala); else novo.salas = novo.salas.map(s => s.id === id ? sala : s);
+      salvarCatalogo(novo, E.nova ? `${cod} criada` : `${cod} atualizada`); return;
+    }
+    case 'apagar-sala': S.confirmar = 'apagar-sala'; break;
+    case 'apagar-sala-sim': {
+      const novo = clone(S.catalogo); novo.salas = novo.salas.filter(s => s.id !== E.id);
+      S.confirmar = null; salvarCatalogo(novo, `${E.codigo} retirada`); return;
+    }
+    default: return;
+  }
+  render();
+});
+
+render();
+iniciar();
+})();
+</script>

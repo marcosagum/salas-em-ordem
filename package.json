@@ -1,0 +1,16 @@
+{
+  "name": "rearme-salas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rearme das salas de produção e camarins da Farmasi Arena depois de cada evento",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/api.test.js && node tests/pagina.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1"
+  }
+}
