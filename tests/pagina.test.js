@@ -105,7 +105,7 @@ const qtd = (doc, tipo) => linha(doc, tipo).querySelector('output').textContent;
     clicar(doc, '[data-a="salvar-conf"]');
     await espera(400);
     check('painel: 3 com diferença', doc.querySelector('.tile.t-no b').textContent === '3');
-    check('botão conferir a próxima sala pendente', /Conferir C-01/.test(doc.querySelector('[data-a="proxima"]').textContent));
+    check('botão conferir a próxima sala pendente', /Conferir\s*próxima: C-01/.test(doc.querySelector('[data-a="proxima"]').textContent));
     clicar(doc, '[data-a="filtro"][data-f="divergente"]');
     check('filtro mostra só as 3 com diferença', doc.querySelectorAll('.sala').length === 3);
     clicar(doc, '[data-a="filtro"][data-f="divergente"]');
