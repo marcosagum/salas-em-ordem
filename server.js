@@ -1,10 +1,10 @@
-// Servidor do Rearme das Salas (Farmasi Arena).
+// Servidor do Salas em Ordem (Farmasi Arena): conferência das salas depois de cada evento.
 // Sem dependências: Node 20 puro. Os dados ficam em um arquivo JSON na pasta DADOS_DIR,
 // que no Coolify deve ser um volume persistente.
 //
 // Três senhas (variáveis de ambiente):
-//   SENHA_ADMIN    administrador: tudo, inclusive editar o previsto das salas e apagar rearmes
-//   SENHA          equipe: cria rearmes, confere salas, marca como rearmada
+//   SENHA_ADMIN    administrador: tudo, inclusive editar o previsto das salas e apagar checagens
+//   SENHA          equipe: cria checagens, confere salas, marca sala em ordem
 //   SENHA_CONSULTA consulta (outro setor): só vê
 const http = require('http');
 const fs = require('fs');
@@ -124,7 +124,7 @@ function validarRegistro(r) {
   if (!texto(r.conferidaPor, 80, true)) return 'Informe quem conferiu';
   if (!texto(r.conferidaEm, 40, true)) return 'Data da conferência inválida';
   if (r.obs !== undefined && !texto(r.obs, 1000)) return 'Observação longa demais';
-  if (r.rearmadaEm !== undefined && r.rearmadaEm !== null && !texto(r.rearmadaEm, 40, true)) return 'Data de rearme inválida';
+  if (r.rearmadaEm !== undefined && r.rearmadaEm !== null && !texto(r.rearmadaEm, 40, true)) return 'Data de "em ordem" inválida';
   return null;
 }
 
@@ -224,7 +224,7 @@ const servidor = http.createServer(async (req, res) => {
     const mr = p.match(/^\/api\/rearmes\/(r[a-z0-9]{1,40})$/);
     if (mr) {
       const r = dados.rearmes[mr[1]];
-      if (!r) return json(res, 404, { erro: 'Rearme não encontrado' });
+      if (!r) return json(res, 404, { erro: 'Checagem não encontrada' });
       if (req.method === 'DELETE') {
         if (!pode('admin')) return negar('admin');
         delete dados.rearmes[mr[1]];
@@ -248,7 +248,7 @@ const servidor = http.createServer(async (req, res) => {
     if (ms) {
       if (!pode('equipe')) return negar('equipe');
       const r = dados.rearmes[ms[1]];
-      if (!r) return json(res, 404, { erro: 'Rearme não encontrado' });
+      if (!r) return json(res, 404, { erro: 'Checagem não encontrada' });
       if (!dados.catalogo.salas.some(s => s.id === ms[2])) return json(res, 404, { erro: 'Sala não encontrada' });
       r.salas = r.salas || {};
       if (req.method === 'DELETE') {
@@ -276,4 +276,4 @@ const servidor = http.createServer(async (req, res) => {
   }
 });
 
-servidor.listen(PORTA, () => console.log(`Rearme das Salas no ar na porta ${PORTA} · senhas: administrador ${SENHA_ADMIN ? 'sim' : 'NÃO'}, equipe ${SENHA ? 'sim' : 'NÃO'}, consulta ${SENHA_CONSULTA ? 'sim' : 'NÃO'}`));
+servidor.listen(PORTA, () => console.log(`Salas em Ordem no ar na porta ${PORTA} · senhas: administrador ${SENHA_ADMIN ? 'sim' : 'NÃO'}, equipe ${SENHA ? 'sim' : 'NÃO'}, consulta ${SENHA_CONSULTA ? 'sim' : 'NÃO'}`));
