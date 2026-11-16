@@ -350,11 +350,13 @@ async function recarregar(){
   if (foco && app.contains(foco) && /^(INPUT|TEXTAREA|SELECT)$/.test(foco.tagName)) return;
   render();
 }
-async function gravar(metodo, url, corpo){
+// várias gravações seguidas, sem recarregar no meio
+async function gravarJuntos(fn){
   gravando++;
-  try { return await api(metodo, url, corpo); }
+  try { return await fn(); }
   finally { gravando--; if (!gravando) { recarregarDepois = false; recarregar().catch(() => {}); } }
 }
+const gravar = (metodo, url, corpo) => gravarJuntos(() => api(metodo, url, corpo));
 let aoVivo = false;
 function ligarAoVivo(){
   if (aoVivo) return; aoVivo = true;
@@ -384,7 +386,7 @@ function iniciar(){
 }
 
 // ---------- regras ----------
-const nomeTipo = id => (S.catalogo.tipos[id] && S.catalogo.tipos[id].nome) || id;
+const nomeTipo = id => (S.catalogo.tipos[id] && S.catalogo.tipos[id].nome) || (S.rasc && S.rasc.novosTipos && S.rasc.novosTipos[id] && S.rasc.novosTipos[id].nome) || id;
 const salaPorId = id => S.catalogo.salas.find(s => s.id === id);
 const codigo = id => { const s = salaPorId(id); return s ? s.codigo : id; };
 function previsto(sala){ const o = {}; (sala.itens || []).forEach(i => { o[i.tipoId] = (o[i.tipoId] || 0) + i.qtd; }); return o; }
@@ -832,9 +834,11 @@ function viewSala(){
     <button class="btn ok big" data-a="tudo-certo">${ic('check')}Está tudo igual ao previsto</button>`}
     <section class="panel"><div class="itens">${linhas}</div></section>
     ${so ? '' : `<div class="row">
-      <select id="add-tipo" class="grow" style="flex:1 1 200px"><option value="">Item a mais na sala…</option>${opcoes.map(t => `<option value="${esc(t.id)}">${esc(t.nome)}</option>`).join('')}</select>
+      <input type="text" id="add-tipo" list="tipos-conf" placeholder="Item a mais na sala (escolha ou escreva)" maxlength="80" style="flex:1 1 200px">
+      <datalist id="tipos-conf">${opcoes.map(t => `<option value="${esc(t.nome)}">`).join('')}</datalist>
       <button class="btn" data-a="add-item">${ic('plus', 'sm')}Adicionar</button>
     </div>
+    <p class="muted small" style="margin:-4px 0 0">Não achou na lista? Escreva o nome: o item novo entra na lista da arena quando você salvar.</p>
     <label class="fld" style="flex:none">Quem conferiu<input type="text" id="conferente" maxlength="80" value="${esc(R.conferidaPor)}" autocomplete="name"></label>
     <label class="fld" style="flex:none">Observação (opcional)<textarea id="obs" maxlength="1000" placeholder="Ex: espelho trincado, sofá manchado">${esc(R.obs)}</textarea></label>
     <div class="fixo">
@@ -960,9 +964,14 @@ document.addEventListener('click', ev => {
     case 'remover-item': R.itens = R.itens.filter(x => x.tipoId !== tipo); break;
     case 'tudo-certo': R.itens = R.itens.filter(x => x.previsto > 0); R.itens.forEach(x => { x.qtd = x.previsto; }); break;
     case 'add-item': {
-      const t = document.getElementById('add-tipo').value;
-      if (!t) return toast('Escolha o item na lista');
-      R.itens.push({ tipoId: t, previsto: 0, qtd: 1 }); break;
+      const nome = document.getElementById('add-tipo').value.trim().replace(/\s+/g, ' ');
+      if (!nome) return toast('Escolha ou escreva o item');
+      const id = slug(nome);
+      if (!id) return toast('Nome inválido');
+      const t = Object.values(S.catalogo.tipos).find(x => x.id === id || slug(x.nome) === id) || (R.novosTipos || {})[id];
+      if (t && R.itens.some(x => x.tipoId === t.id)) return toast('Esse item já está na lista');
+      if (!t) { R.novosTipos = R.novosTipos || {}; R.novosTipos[id] = { id, nome }; }
+      R.itens.push({ tipoId: t ? t.id : id, previsto: 0, qtd: 1 }); break;
     }
     case 'salvar-conf': case 'salvar-prox': {
       const quem = (R.conferidaPor || '').trim();
@@ -977,7 +986,14 @@ document.addEventListener('click', ev => {
       // conferir de novo uma sala já rearmada mantém a marcação só se continuar tudo certo
       if (ant && ant.rearmadaEm && iguais) reg.rearmadaEm = ant.rearmadaEm;
       const rr = S.rearmes[S.rearmeId]; rr.salas = rr.salas || {}; rr.salas[S.salaId] = reg;
-      gravar('PUT', urlSala(), reg).then(() => toast(iguais ? `${sala.codigo}: tudo certo!` : `${sala.codigo} salva. Diferenças no cruzamento.`), e => toast(e.msg));
+      // itens novos escritos na conferência entram na lista da arena antes da contagem
+      const novos = Object.values(R.novosTipos || {}).filter(t => contagem[t.id] !== undefined && !S.catalogo.tipos[t.id]);
+      novos.forEach(t => { S.catalogo.tipos[t.id] = t; });
+      const url = urlSala();
+      gravarJuntos(async () => {
+        for (const t of novos) await api('POST', 'api/tipos', { nome: t.nome });
+        return api('PUT', url, reg);
+      }).then(() => toast(iguais ? `${sala.codigo}: tudo certo!` : `${sala.codigo} salva. Diferenças no cruzamento.`), e => toast(e.msg));
       const prox = a === 'salvar-prox' && proximaPendente(rr, S.salaId);
       if (prox) return abrirSala(prox.id);
       S.view = 'rearme'; S.rasc = null; render(); window.scrollTo(0, 0); return;

@@ -87,6 +87,8 @@ function bloqueado(ip) {
 // ---------- validação ----------
 const texto = (v, max, obrigatorio) => typeof v === 'string' && v.length <= max && (!obrigatorio || v.trim().length > 0);
 const qtd = v => Number.isInteger(v) && v >= 0 && v <= 999;
+// Mesmo slug da página: "Mesa Bistrô" → "mesa-bistro"
+const slug = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
 
 function validarCatalogo(c) {
   if (!c || typeof c !== 'object' || Array.isArray(c)) return 'Catálogo inválido';
@@ -208,6 +210,23 @@ const servidor = http.createServer(async (req, res) => {
       dados.catalogo = corpo;
       mudou();
       return json(res, 204);
+    }
+
+    // Item novo achado na conferência: equipe ou administrador. Se já existir um item com o
+    // mesmo nome (sem contar acento e maiúscula), devolve esse em vez de criar outro.
+    if (p === '/api/tipos' && req.method === 'POST') {
+      if (!pode('equipe')) return negar('equipe');
+      const corpo = await lerCorpo(req);
+      const nome = corpo && texto(corpo.nome, 80, true) ? corpo.nome.trim().replace(/\s+/g, ' ') : '';
+      const id = slug(nome);
+      if (!nome || !ID.test(id)) return json(res, 400, { erro: 'Escreva o nome do item' });
+      const tipos = dados.catalogo.tipos;
+      const ja = tipos[id] || Object.values(tipos).find(t => slug(t.nome) === id);
+      if (ja) return json(res, 200, ja);
+      if (Object.keys(tipos).length >= 500) return json(res, 400, { erro: 'Itens demais' });
+      tipos[id] = { id, nome };
+      mudou();
+      return json(res, 200, tipos[id]);
     }
 
     // Criar um rearme (um por evento): equipe ou administrador

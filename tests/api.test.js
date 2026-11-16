@@ -70,6 +70,17 @@ async function pedir(metodo, url, corpo, cookie) {
     check('consulta vê a conferência', d2.rearmes[id].salas['c-05'].contagem['mesa-bistro'] === 2);
     check('conferir de novo substitui (não mistura)', (await pedir('PUT', `/api/rearmes/${id}/salas/c-05`, { ...reg, contagem: { banqueta: 12 } }, eq)).status === 204
       && (await pedir('GET', '/api/dados', undefined, eq)).d.rearmes[id].salas['c-05'].contagem['mesa-bistro'] === undefined);
+    console.log('\n3b. Item novo achado na conferência');
+    check('consulta não cria item', (await pedir('POST', '/api/tipos', { nome: 'Ring light' }, ver)).status === 403);
+    check('item sem nome é recusado', (await pedir('POST', '/api/tipos', { nome: '  ' }, eq)).status === 400);
+    const rl = await pedir('POST', '/api/tipos', { nome: 'Ring  light' }, eq);
+    check('equipe cria item novo', rl.status === 200 && rl.d.id === 'ring-light' && rl.d.nome === 'Ring light', rl);
+    const rl2 = await pedir('POST', '/api/tipos', { nome: 'RING LIGHT' }, eq);
+    check('mesmo nome não duplica', rl2.status === 200 && rl2.d.nome === 'Ring light', rl2);
+    const mb = await pedir('POST', '/api/tipos', { nome: 'mesa bistro' }, eq);
+    check('nome sem acento acha o item que já existe', mb.status === 200 && mb.d.id === 'mesa-bistro', mb);
+    check('conferência aceita o item novo', (await pedir('PUT', `/api/rearmes/${id}/salas/c-05`, { ...reg, contagem: { 'ring-light': 1 } }, eq)).status === 204);
+    check('agora são 22 itens', Object.keys((await pedir('GET', '/api/dados', undefined, eq)).d.catalogo.tipos).length === 22);
     check('equipe apaga conferência', (await pedir('DELETE', `/api/rearmes/${id}/salas/c-05`, undefined, eq)).status === 204);
 
     console.log('\n4. Previsto das salas (só administrador)');
