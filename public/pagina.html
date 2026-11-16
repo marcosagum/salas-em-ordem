@@ -174,36 +174,31 @@ textarea{resize:vertical;min-height:64px}
 .mv-i b{font-weight:600}
 .ok-tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ok)}
 
-/* o que fazer: três colunas por destino, só com as cores do sistema */
+/* linhas de troca (cruzamento) */
 .mvl .seta{color:var(--brand)}
 .mvl .q{display:inline-grid;place-items:center;min-width:26px;height:24px;padding:0 7px;margin-right:2px;border-radius:var(--r-pill);background:var(--chip);color:var(--ink);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
 .mvl .ok-tag{margin-left:auto}
-.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:hidden}
-.col{display:flex;flex-direction:column;min-width:0}
-.col + .col{border-left:1px solid var(--line)}
-.col-h{display:flex;align-items:center;gap:10px;padding:14px;background:var(--paper);border-bottom:3px solid var(--ink)}
-.col-ic{width:34px;height:34px;flex:none;border-radius:10px;background:var(--ink);color:#fff;display:grid;place-items:center}
-.col-t{display:flex;flex-direction:column;gap:2px}
-.col-t b{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
-.col-t span{font-size:11.5px;color:var(--muted);line-height:1.3}
-.col-n{min-width:30px;height:30px;padding:0 9px;flex:none;border-radius:var(--r-pill);background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:600;font-size:14px;font-variant-numeric:tabular-nums}
-.col-n.zero{background:var(--chip);color:var(--muted)}
-.col-b{display:flex;flex-direction:column;gap:8px;padding:12px}
-.cl-sub{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:6px}
-.cl-sub:first-child{margin-top:0}
-.cl-sub.longe{color:var(--brand)}
-.cl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
-.cl.longe{border-left:3px solid var(--brand)}
-.cl-r{display:flex;align-items:center;gap:8px}
-.cl-i{font-size:14px;margin-left:auto}
-.cl-i b{font-weight:700}
-.cl.feito{opacity:.5}
-.cl.feito .cl-i{text-decoration:line-through}
-.col .vazio{padding:6px 2px}
-@media (max-width:760px){
-  .cols{grid-template-columns:1fr}
-  .col + .col{border-left:0;border-top:1px solid var(--line)}
-}
+
+/* o que fazer: um bloco por sala de destino */
+.dss{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.ds{overflow:hidden}
+.ds.feito{opacity:.55}
+.ds-h{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--paper);border-bottom:3px solid var(--ink)}
+.ds-n{width:34px;height:34px;flex:none;border-radius:10px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;font-size:15px}
+.ds-n.dep{background:var(--warn-bg);color:var(--warn)}
+.ds-t{display:flex;flex-direction:column;gap:1px;min-width:0}
+.ds-t b{font-size:20px;font-weight:700;line-height:1.1}
+.ds-l{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding:10px 14px;border-top:1px solid var(--line);border-left:3px solid transparent}
+.ds-h + .ds-l{border-top:0}
+.ds-l.longe{border-left-color:var(--brand)}
+.ds-l.feito{opacity:.5}
+.ds-l.feito .ds-is{text-decoration:line-through}
+.ds-de{display:flex;align-items:center;gap:6px;flex:none;min-width:120px}
+.ds-is{display:flex;flex-wrap:wrap;gap:6px;flex:1 1 150px;min-width:0}
+.ds-i{background:var(--chip);border-radius:var(--r-pill);padding:4px 10px;font-size:13.5px;white-space:nowrap}
+.ds-i b{font-weight:700}
+.ds-lg{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+.ds-l .btn,.ds-l .ok-tag{margin-left:auto}
 
 /* conferência */
 .sala-top{display:flex;align-items:center;gap:12px}
@@ -282,6 +277,7 @@ textarea{resize:vertical;min-height:64px}
   .imp-sec .ck{width:22px}
   .imp-sec .ck i{display:inline-block;width:12px;height:12px;border:1.5px solid var(--ghost);border-radius:3px}
   .imp-sec .feito{color:var(--muted);text-decoration:line-through}
+  .imp-sec tr.grp td{background:var(--paper);border-top:1.5px solid var(--ink);font-size:12px}
   .imp-pe{display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:6px}
   .imp .notice{font-size:11px}
 }
@@ -475,6 +471,38 @@ function planoDe(r){
 }
 const plural = (n, um, varios) => n === 1 ? um : varios;
 
+// O que fazer, um bloco por sala de destino: tudo o que tem que chegar na sala para fechá-la,
+// separado por origem (outra sala ou depósito). No fim, o que sobra vai para o depósito.
+//   destinos: [{ salaId, total, origens: [{ de: salaId|null, longe, itens: [{tipoId, qtd}] }], saidas: [{ para: salaId|null, tipoId, qtd }] }]
+//   deposito: [{ de: salaId, total, itens: [{tipoId, qtd}] }]
+function porDestino(plano){
+  const ordem = {}; S.catalogo.salas.forEach((s, i) => { ordem[s.id] = i; });
+  const pos = id => id === null ? 1e9 : (ordem[id] ?? 1e8);
+  const dest = {}, dep = {};
+  const novo = id => dest[id] || (dest[id] = { salaId: id, total: 0, origens: [], saidas: [] });
+  const entrar = (para, de, longe, tipoId, qtd) => {
+    const d = novo(para);
+    let o = d.origens.find(x => x.de === de);
+    if (!o) { o = { de, longe: false, itens: [] }; d.origens.push(o); }
+    if (longe) o.longe = true;
+    const it = o.itens.find(x => x.tipoId === tipoId);
+    if (it) it.qtd += qtd; else o.itens.push({ tipoId, qtd });
+    d.total += qtd;
+  };
+  plano.remanejar.forEach(m => entrar(m.para, m.de, m.bloco === null, m.tipoId, m.qtd));
+  plano.buscar.forEach(m => entrar(m.para, null, false, m.tipoId, m.qtd));
+  // o que sai de uma sala que também recebe (para avisar no bloco dela)
+  plano.remanejar.forEach(m => { if (dest[m.de]) dest[m.de].saidas.push({ para: m.para, tipoId: m.tipoId, qtd: m.qtd }); });
+  plano.devolver.forEach(m => {
+    if (dest[m.de]) dest[m.de].saidas.push({ para: null, tipoId: m.tipoId, qtd: m.qtd });
+    const d = dep[m.de] || (dep[m.de] = { de: m.de, total: 0, itens: [] });
+    d.itens.push({ tipoId: m.tipoId, qtd: m.qtd }); d.total += m.qtd;
+  });
+  const destinos = Object.values(dest).sort((a, b) => pos(a.salaId) - pos(b.salaId));
+  destinos.forEach(d => d.origens.sort((a, b) => pos(a.de) - pos(b.de)));
+  return { destinos, deposito: Object.values(dep).sort((a, b) => pos(a.de) - pos(b.de)) };
+}
+
 // ---------- telas ----------
 function render(){
   lerCampos();
@@ -661,36 +689,33 @@ function htmlLista(r, c, plano){
   if (!c.conferidas) return `<div class="panel empty">${ic('list')}A lista aparece aqui conforme as salas forem conferidas.</div>`;
   const regs = r.salas || {};
   const rearmada = id => !!(regs[id] && regs[id].rearmadaEm);
-  const soma = l => l.reduce((a, x) => a + x.qtd, 0);
-  const cod = id => `<span class="cod lt">${esc(codigo(id))}</span>`;
   const seta = ic('arrow', 'seta');
-  const ok = f => f ? `<span class="ok-tag">${ic('check', 'sm')}Feito</span>` : '';
-  // Uma tarefa: rota (de → para) e o item
-  const tarefa = (rota, m, f, extra) => `<div class="cl mvl${extra ? ' ' + extra : ''}${f ? ' feito' : ''}"><span class="cl-r">${rota}</span><span class="cl-i"><b>${m.qtd}</b> ${esc(nomeTipo(m.tipoId))}</span>${ok(f)}</div>`;
-  // Coluna 1: entre salas (perto, por bloco; depois longe, entre blocos)
-  let c1 = '';
-  blocos().forEach(b => {
-    const l = plano.remanejar.filter(m => m.bloco !== null && m.bloco === b.grupo);
-    if (l.length) c1 += `<div class="cl-sub">Perto · ${esc(b.nome.toLowerCase())}</div>` + l.map(m => tarefa(`${cod(m.de)} ${seta} ${cod(m.para)}`, m, rearmada(m.de) && rearmada(m.para))).join('');
-  });
-  const longe = plano.remanejar.filter(m => m.bloco === null);
-  if (longe.length) c1 += `<div class="cl-sub longe">Longe · entre camarins e produção</div>` + longe.map(m => tarefa(`${cod(m.de)} ${seta} ${cod(m.para)}`, m, rearmada(m.de) && rearmada(m.para), 'longe')).join('');
-  // Coluna 2: do depósito para a sala · Coluna 3: da sala para o depósito
-  const c2 = plano.buscar.map(m => tarefa(`<span class="muted small">para</span> ${cod(m.para)}`, m, rearmada(m.para))).join('');
-  const c3 = plano.devolver.map(m => tarefa(`<span class="muted small">da</span> ${cod(m.de)}`, m, rearmada(m.de))).join('');
-  const col = (icone, tit, sub, n, corpo) => `<section class="col">
-      <div class="col-h"><span class="col-ic">${ic(icone)}</span><span class="grow col-t"><b>${tit}</b><span>${sub}</span></span><span class="col-n${n ? '' : ' zero'}" title="peças">${n}</span></div>
-      <div class="col-b">${corpo || `<p class="vazio">Nada aqui.</p>`}</div>
+  const lado = id => id === null ? `<span class="cod dep">${ic('box', 'sm')}Depósito</span>` : `<span class="cod lt">${esc(codigo(id))}</span>`;
+  const itensChips = l => l.map(x => `<span class="ds-i"><b>${x.qtd}</b> ${esc(nomeTipo(x.tipoId))}</span>`).join('');
+  const nomeSala = id => { const s = salaPorId(id); return s ? s.nome : ''; };
+  const { destinos, deposito } = porDestino(plano);
+  // Botão de fechar a sala (marca "em ordem") ou a marca de feito
+  const fechar = id => rearmada(id)
+    ? `<span class="ok-tag">${ic('check', 'sm')}Em ordem</span>`
+    : pode('equipe') ? `<button class="btn sm ok" data-a="marcar-sala" data-id="${esc(id)}">${ic('check', 'sm')}Fechar ${esc(codigo(id))}</button>` : '';
+  const blocoDest = (d, n) => `<section class="panel ds${rearmada(d.salaId) ? ' feito' : ''}">
+      <div class="ds-h"><span class="ds-n">${n}</span><span class="grow ds-t"><span class="muted small">Levar para a</span><b>${esc(codigo(d.salaId))}</b><span class="muted small">${esc(nomeSala(d.salaId))} · ${d.total} ${plural(d.total, 'peça', 'peças')}</span></span>${fechar(d.salaId)}</div>
+      ${d.origens.map(o => `<div class="ds-l${o.longe ? ' longe' : ''}"><span class="ds-de"><span class="muted small">${o.de === null ? 'buscar no' : 'tirar da'}</span>${lado(o.de)}</span><span class="ds-is">${itensChips(o.itens)}</span>${o.longe ? `<span class="ds-lg">longe</span>` : ''}</div>`).join('')}
+      ${d.saidas.length ? `<div class="tb-n">${ic('undo', 'sm')} Sai também desta sala: ${d.saidas.map(x => `${x.qtd} ${esc(nomeTipo(x.tipoId))} ${seta} ${x.para === null ? 'depósito' : esc(codigo(x.para))}`).join(' · ')}</div>` : ''}
     </section>`;
   let h = avisoPendentes(r);
-  if (!plano.buscar.length && !plano.remanejar.length && !plano.devolver.length) {
+  if (!destinos.length && !deposito.length) {
     h += `<div class="panel empty">${ic('checkc')}As salas conferidas estão iguais ao previsto. Nada a arrumar.</div>`;
   } else {
-    h += `<div class="panel cols">
-      ${col('swap', 'Entre salas', 'Levar de uma sala para outra', soma(plano.remanejar), c1)}
-      ${col('box', 'Do depósito', 'Buscar e levar para a sala', soma(plano.buscar), c2)}
-      ${col('undo', 'Para o depósito', 'Está sobrando: tirar da sala', soma(plano.devolver), c3)}
-    </div>`;
+    h += `<p class="muted small" style="margin:0">Uma sala por vez: leve tudo o que está no bloco dela e feche a sala.</p>`;
+    h += `<div class="dss">${destinos.map((d, i) => blocoDest(d, i + 1)).join('')}</div>`;
+    if (deposito.length) {
+      const tot = deposito.reduce((a, d) => a + d.total, 0);
+      h += `<section class="panel ds">
+        <div class="ds-h"><span class="ds-n dep">${ic('box', 'sm')}</span><span class="grow ds-t"><span class="muted small">Levar para o</span><b>Depósito</b><span class="muted small">Está sobrando · ${tot} ${plural(tot, 'peça', 'peças')}</span></span></div>
+        ${deposito.map(d => `<div class="ds-l${rearmada(d.de) ? ' feito' : ''}"><span class="ds-de"><span class="muted small">tirar da</span>${lado(d.de)}</span><span class="ds-is">${itensChips(d.itens)}</span>${destinos.some(x => x.salaId === d.de) ? '' : fechar(d.de)}</div>`).join('')}
+      </section>`;
+    }
   }
   const obs = S.catalogo.salas.filter(s => regs[s.id] && regs[s.id].obs);
   if (obs.length) h += `<section class="panel tb"><div class="tb-h"><span class="grow">${ic('note', 'sm')}Observações</span><span class="ct">${obs.length}</span></div>${obs.map(s => `<div class="tb-l"><span class="cod lt">${esc(s.codigo)}</span><span class="grow">${esc(regs[s.id].obs)}</span></div>`).join('')}</section>`;
@@ -702,15 +727,21 @@ function htmlImpressao(r, c, plano){
   const regs = r.salas || {};
   const rearmada = id => !!(regs[id] && regs[id].rearmadaEm);
   const agora = new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-  const linhas = [];
-  if (plano) {
-    blocos().forEach(b => plano.remanejar.filter(m => m.bloco !== null && m.bloco === b.grupo).forEach(m => linhas.push(['Troca · ' + b.nome.toLowerCase(), codigo(m.de), codigo(m.para), m, rearmada(m.de) && rearmada(m.para), 'bloco'])));
-    plano.remanejar.filter(m => m.bloco === null).forEach(m => linhas.push(['Entre blocos', codigo(m.de), codigo(m.para), m, rearmada(m.de) && rearmada(m.para), 'entre']));
-    plano.buscar.forEach(m => linhas.push(['Buscar no depósito', 'Depósito', codigo(m.para), m, rearmada(m.para), 'buscar']));
-    plano.devolver.forEach(m => linhas.push(['Levar ao depósito', codigo(m.de), 'Depósito', m, rearmada(m.de), 'levar']));
+  // O que fazer: um grupo por sala de destino e, no fim, o que vai para o depósito
+  const pd = plano ? porDestino(plano) : { destinos: [], deposito: [] };
+  const itensTxt = l => l.map(x => `<b>${x.qtd}</b> ${esc(nomeTipo(x.tipoId))}`).join(', ');
+  let linhas = 0, corpoFazer = '';
+  pd.destinos.forEach((d, i) => {
+    const s = salaPorId(d.salaId);
+    corpoFazer += `<tr class="grp${rearmada(d.salaId) ? ' feito' : ''}"><td class="ck"></td><td colspan="2">${i + 1}. Levar para a <b>${esc(codigo(d.salaId))}</b>${s ? ' · ' + esc(s.nome) : ''} · ${d.total} ${plural(d.total, 'peça', 'peças')}</td></tr>`;
+    d.origens.forEach(o => { linhas++; corpoFazer += `<tr class="${rearmada(d.salaId) ? 'feito' : ''}"><td class="ck"><i></i></td><td class="c">${o.de === null ? 'Depósito' : 'da ' + esc(codigo(o.de))}${o.longe ? ' (longe)' : ''}</td><td>${itensTxt(o.itens)}</td></tr>`; });
+  });
+  if (pd.deposito.length) {
+    corpoFazer += `<tr class="grp"><td class="ck"></td><td colspan="2">Levar para o <b>Depósito</b> · está sobrando</td></tr>`;
+    pd.deposito.forEach(d => { linhas++; corpoFazer += `<tr class="${rearmada(d.de) ? 'feito' : ''}"><td class="ck"><i></i></td><td class="c">da ${esc(codigo(d.de))}</td><td>${itensTxt(d.itens)}</td></tr>`; });
   }
-  const fazer = linhas.length
-    ? `<table><tr><th class="ck"></th><th>O quê</th><th>Item</th><th>De</th><th>Para</th></tr>${linhas.map(([o, de, para, m, f, k]) => `<tr class="${f ? 'feito' : ''}"><td class="ck"><i></i></td><td>${esc(o)}</td><td><b>${m.qtd}</b> ${esc(nomeTipo(m.tipoId))}</td><td class="c">${esc(de)}</td><td class="c">${esc(para)}</td></tr>`).join('')}</table>`
+  const fazer = linhas
+    ? `<table><tr><th class="ck"></th><th>De onde</th><th>Itens</th></tr>${corpoFazer}</table>`
     : `<table><tr><td>${c.conferidas ? 'As salas conferidas estão iguais ao previsto.' : 'Nenhuma sala conferida ainda.'}</td></tr></table>`;
   const salas = S.catalogo.salas.map(s => {
     const reg = regs[s.id], st = statusSala(s, reg), d = plano && plano.porSala[s.id];
@@ -724,7 +755,7 @@ function htmlImpressao(r, c, plano){
       <div class="ev"><b>${esc(r.nome)}</b><span>${r.data ? 'Evento ' + fmtData(r.data) + ' · ' : ''}impresso em ${agora}</span></div></div>
     <div class="imp-st">${st(c.pendente, 'A conferir', 'var(--ink)')}${st(c.divergente, 'Com diferença', 'var(--no)')}${st(c.ok, 'Sem diferença', 'var(--ok)')}${st(c.rearmada, 'Em ordem', 'var(--ok)')}</div>
     ${avisoPendentes(r)}
-    <div class="imp-sec"><h3>O que fazer<span class="ct">${linhas.length}</span></h3>${fazer}</div>
+    <div class="imp-sec"><h3>O que fazer, sala por sala<span class="ct">${pd.destinos.length} ${plural(pd.destinos.length, 'sala', 'salas')}</span></h3>${fazer}</div>
     <div class="imp-sec"><h3>Cruzamento por sala</h3><table><tr><th>Sala</th><th>Bloco</th><th>Falta</th><th>Sobra</th><th>Situação</th></tr>${salas}</table></div>
     ${obs.length ? `<div class="imp-sec"><h3>Observações</h3><table>${obs.map(s => `<tr><td class="c">${esc(s.codigo)}</td><td>${esc(regs[s.id].obs)}</td></tr>`).join('')}</table></div>` : ''}
     <div class="imp-pe"><span>Salas em Ordem · Farmasi Arena · GL events</span><span>${agora}</span></div>
@@ -776,26 +807,15 @@ function textoWhatsApp(r){
   let t = `*SALAS EM ORDEM*\n${r.nome}${r.data ? ' · ' + fmtData(r.data) : ''}\n`;
   const pend = pendentes(r);
   if (pend.length) t += `Falta conferir: ${pend.join(', ')}\n`;
-  const troca = m => `• ${codigo(m.de)} → ${codigo(m.para)}: ${m.qtd} ${nomeTipo(m.tipoId)}`;
   const itensTxt = l => l.map(x => `${x.qtd} ${nomeTipo(x.tipoId)}`).join(', ');
-  blocos().forEach(b => {
-    const comDif = b.salas.filter(s => plano.porSala[s.id]);
-    if (!comDif.length) return;
-    const trocas = plano.remanejar.filter(m => m.bloco !== null && m.bloco === b.grupo);
-    t += `\n*${b.nome.toUpperCase()}*\n` + comDif.map(s => {
-      const d = plano.porSala[s.id];
-      return `• ${s.codigo}:` + (d.faltas.length ? ` falta ${itensTxt(d.faltas)}` : '') + (d.faltas.length && d.sobras.length ? ';' : '') + (d.sobras.length ? ` sobra ${itensTxt(d.sobras)}` : '');
-    }).join('\n') + '\n';
-    if (trocas.length) t += `_Trocas no bloco_\n` + trocas.map(troca).join('\n') + '\n';
+  const { destinos, deposito } = porDestino(plano);
+  destinos.forEach((d, i) => {
+    const s = salaPorId(d.salaId);
+    t += `\n*${i + 1}. LEVAR PARA A ${codigo(d.salaId)}*${s ? ` (${s.nome})` : ''}\n`
+      + d.origens.map(o => `• ${o.de === null ? 'do depósito' : 'da ' + codigo(o.de)}${o.longe ? ' (longe)' : ''}: ${itensTxt(o.itens)}`).join('\n') + '\n';
   });
-  const entre = plano.remanejar.filter(m => m.bloco === null);
-  if (entre.length) t += `\n*ENTRE CAMARINS E PRODUÇÃO*\n` + entre.map(troca).join('\n') + '\n';
-  if (plano.buscar.length) {
-    const g = {}; plano.buscar.forEach(b => (g[b.tipoId] = g[b.tipoId] || []).push(b));
-    t += `\n*BUSCAR NO DEPÓSITO*\n` + Object.keys(g).map(k => `• ${g[k].reduce((a, b) => a + b.qtd, 0)} ${nomeTipo(k)} → ${g[k].map(b => `${codigo(b.para)} (${b.qtd})`).join(', ')}`).join('\n') + '\n';
-  }
-  if (plano.devolver.length) t += `\n*LEVAR AO DEPÓSITO*\n` + plano.devolver.map(d => `• ${d.qtd} ${nomeTipo(d.tipoId)} da ${codigo(d.de)}`).join('\n') + '\n';
-  if (!plano.buscar.length && !plano.remanejar.length && !plano.devolver.length) t += `\nSalas conferidas iguais ao previsto.\n`;
+  if (deposito.length) t += `\n*LEVAR PARA O DEPÓSITO*\n` + deposito.map(d => `• da ${codigo(d.de)}: ${itensTxt(d.itens)}`).join('\n') + '\n';
+  if (!destinos.length && !deposito.length) t += `\nSalas conferidas iguais ao previsto.\n`;
   const obs = S.catalogo.salas.filter(s => regs[s.id] && regs[s.id].obs);
   if (obs.length) t += `\n*OBSERVAÇÕES*\n` + obs.map(s => `• ${s.codigo}: ${regs[s.id].obs}`).join('\n') + '\n';
   return t;

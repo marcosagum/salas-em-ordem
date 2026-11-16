@@ -16,6 +16,9 @@ const espera = (ms = 150) => new Promise(r => setTimeout(r, ms));
 
 const PORTA = 3990 + Math.floor(Math.random() * 9);
 const DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'rearme-p-'));
+// A tela é testada com uma lista fixa (a do relatório de 08/10), para os testes não mudarem
+// toda vez que o previsto real das salas for atualizado em inicial.json.
+fs.copyFileSync(path.join(__dirname, 'catalogo-teste.json'), path.join(DIR, 'rearme.json'));
 const base = `http://127.0.0.1:${PORTA}/`;
 
 async function abrir(senha) {
@@ -121,12 +124,14 @@ const qtd = (doc, tipo) => linha(doc, tipo).querySelector('output').textContent;
     check('tocar de novo tira o filtro', doc.querySelectorAll('.sala').length === 13);
     clicar(doc, '[data-a="aba"][data-aba="lista"]');
     const lista = doc.getElementById('app').textContent.replace(/\s+/g, ' ');
-    const cols = doc.querySelectorAll('.cols .col');
-    check('três colunas: entre salas, do depósito, para o depósito', cols.length === 3 && /Entre salas/.test(cols[0].textContent) && /Do depósito/.test(cols[1].textContent) && /Para o depósito/.test(cols[2].textContent));
-    const c1 = cols[0].textContent.replace(/\s+/g, ' ');
-    check('banquetas da C-02 vão para a C-05 (perto, camarins)', /Perto · camarins ?C-02 C-05 ?2 Banqueta/.test(c1), c1);
-    check('bistrô da T-53 vai para a C-05 (longe)', /Longe · entre camarins e produção ?T-53 C-05 ?1 Mesa bistrô/.test(c1) && !!cols[0].querySelector('.cl.longe'));
-    check('nada a buscar no depósito', !!cols[1].querySelector('.vazio') && cols[1].querySelector('.col-n').textContent === '0');
+    const dss = [...doc.querySelectorAll('.dss .ds')].map(e => e.textContent.replace(/\s+/g, ' ').trim());
+    check('um bloco por sala de destino: só a C-05 recebe', dss.length === 1 && /Levar para a ?C-05 ?Camarim 05 · 3 peças/.test(dss[0]), dss);
+    check('no bloco da C-05: 2 banquetas da C-02 e 1 bistrô da T-53 (longe)', /tirar da ?C-02 ?2 Banqueta/.test(dss[0]) && /tirar da ?T-53 ?1 Mesa bistrô ?longe/.test(dss[0]) && !!doc.querySelector('.dss .ds-l.longe'), dss[0]);
+    check('a C-02 vem antes da T-53 dentro do bloco', dss[0].indexOf('C-02') < dss[0].indexOf('T-53'));
+    check('botão para fechar a C-05', !!doc.querySelector('.dss [data-a="marcar-sala"][data-id="c-05"]'));
+    const dep = [...doc.querySelectorAll('.ds')].find(e => !e.closest('.dss'));
+    check('bloco do depósito: Ring light sobrando na C-02', !!dep && /Levar para o ?Depósito/.test(dep.textContent) && /tirar da ?C-02 ?1 Ring light/.test(dep.textContent.replace(/\s+/g, ' ')));
+    check('sem as três colunas antigas', !doc.querySelector('.cols'));
     check('aviso das salas pendentes', /Ainda falta conferir/.test(lista));
     check('observação na lista', /Espelho ok/.test(lista));
     clicar(doc, '[data-a="aba"][data-aba="cruz"]');
@@ -146,8 +151,8 @@ const qtd = (doc, tipo) => linha(doc, tipo).querySelector('output').textContent;
     await espera(400);
     check('C-05 em ordem', !!doc.querySelector('.sala.st-rearmada[data-id="c-05"]'));
     clicar(doc, '[data-a="aba"][data-aba="lista"]');
-    check('troca C-02 → C-05 riscada (as duas em ordem)', !!doc.querySelector('.mvl.feito'));
-    check('linha do remanejamento ainda aberta (T-53 não está em ordem)', !!doc.querySelector('.mvl:not(.feito)'));
+    check('bloco da C-05 riscado (C-05 em ordem)', !!doc.querySelector('.dss .ds.feito'));
+    check('depósito: linha da C-02 riscada (C-02 em ordem)', !!doc.querySelector('.ds-l.feito'));
 
     console.log('\n5b. Salvar e ir para a próxima');
     clicar(doc, '[data-a="proxima"]');
@@ -201,7 +206,8 @@ const qtd = (doc, tipo) => linha(doc, tipo).querySelector('output').textContent;
     check('sem botão de novo rearme', !doc.querySelector('[data-a="novo"]'));
     clicar(doc, '[data-a="abrir-rearme"]');
     clicar(doc, '[data-a="aba"][data-aba="lista"]');
-    check('vê a lista de rearme', /Perto · camarins/.test(doc.getElementById('app').textContent));
+    check('vê o que fazer por sala', /Levar para as*C-05/.test(doc.getElementById('app').textContent));
+    check('consulta não vê o botão de fechar sala', !doc.querySelector('[data-a="marcar-sala"]'));
     check('sem botão de conferir a próxima', !doc.querySelector('[data-a="proxima"]'));
     clicar(doc, '[data-a="aba"][data-aba="cruz"]');
     check('cruzamento sem botão de marcar rearmada', !doc.querySelector('[data-a="marcar-sala"]'));

@@ -1,6 +1,6 @@
 {
  "catalogo": {
-  "origem": "Relatório de Mobiliário das Salas, 08/10/2026",
+  "origem": "Termo de Responsabilidade Camarim e Salas de Produção 2026",
   "tipos": {
    "arara": {
     "id": "arara",
@@ -12,7 +12,7 @@
    },
    "armario-pequeno-escritorio": {
     "id": "armario-pequeno-escritorio",
-    "nome": "Armário pequeno escritório"
+    "nome": "Armário pequeno marrom"
    },
    "banqueta": {
     "id": "banqueta",
@@ -28,7 +28,7 @@
    },
    "espelho-grande": {
     "id": "espelho-grande",
-    "nome": "Espelho grande"
+    "nome": "Espelho moldura madeira"
    },
    "lixeira-inox": {
     "id": "lixeira-inox",
@@ -48,7 +48,7 @@
    },
    "mesa-branca": {
     "id": "mesa-branca",
-    "nome": "Mesa branca"
+    "nome": "Mesa pranchão branca"
    },
    "mesa-branca-grande": {
     "id": "mesa-branca-grande",
@@ -56,7 +56,7 @@
    },
    "mesa-centro-preta-inox": {
     "id": "mesa-centro-preta-inox",
-    "nome": "Mesa de centro preta com inox"
+    "nome": "Mesinha de centro preta"
    },
    "mesa-preta-inox": {
     "id": "mesa-preta-inox",
@@ -76,7 +76,7 @@
    },
    "sofa-preto-1": {
     "id": "sofa-preto-1",
-    "nome": "Sofá preto 1 lugar"
+    "nome": "Poltrona preta"
    },
    "sofa-preto-2": {
     "id": "sofa-preto-2",
@@ -85,6 +85,22 @@
    "sofa-preto-3": {
     "id": "sofa-preto-3",
     "nome": "Sofá preto 3 lugares"
+   },
+   "sofa-camurca-3": {
+    "id": "sofa-camurca-3",
+    "nome": "Sofá camurça 3 lugares"
+   },
+   "espelho-moldura-branca": {
+    "id": "espelho-moldura-branca",
+    "nome": "Espelho moldura branca (no banheiro)"
+   },
+   "mesa-pranchao-marrom": {
+    "id": "mesa-pranchao-marrom",
+    "nome": "Mesa pranchão marrom"
+   },
+   "aparador-marrom": {
+    "id": "aparador-marrom",
+    "nome": "Aparador marrom"
    }
   },
   "salas": [
@@ -95,11 +111,11 @@
     "grupo": "Camarim",
     "itens": [
      {
-      "tipoId": "sofa-camurca-2",
+      "tipoId": "sofa-camurca-3",
       "qtd": 3
      },
      {
-      "tipoId": "mesa-preta-inox",
+      "tipoId": "mesa-centro-preta-inox",
       "qtd": 1
      },
      {
@@ -107,23 +123,23 @@
       "qtd": 1
      },
      {
-      "tipoId": "mesa-centro-preta-inox",
+      "tipoId": "arara",
       "qtd": 1
      },
      {
-      "tipoId": "mesa-bistro",
+      "tipoId": "espelho-moldura-branca",
       "qtd": 1
+     },
+     {
+      "tipoId": "lixeira-inox",
+      "qtd": 2
      },
      {
       "tipoId": "banqueta",
       "qtd": 4
      },
      {
-      "tipoId": "planta",
-      "qtd": 2
-     },
-     {
-      "tipoId": "lixeira-inox",
+      "tipoId": "mesa-bistro",
       "qtd": 1
      }
     ]
@@ -137,6 +153,18 @@
      {
       "tipoId": "lixeira-inox",
       "qtd": 1
+     },
+     {
+      "tipoId": "sofa-preto-2",
+      "qtd": 1
+     },
+     {
+      "tipoId": "banqueta",
+      "qtd": 8
+     },
+     {
+      "tipoId": "mesa-bistro",
+      "qtd": 2
      }
     ]
    },
@@ -147,11 +175,43 @@
     "grupo": "Camarim",
     "itens": [
      {
-      "tipoId": "mesa-bistro",
-      "qtd": 2
+      "tipoId": "sofa-preto-3",
+      "qtd": 1
      },
      {
       "tipoId": "sofa-preto-2",
+      "qtd": 2
+     },
+     {
+      "tipoId": "espelho-grande",
+      "qtd": 1
+     },
+     {
+      "tipoId": "arara",
+      "qtd": 1
+     },
+     {
+      "tipoId": "lixeira-inox",
+      "qtd": 1
+     },
+     {
+      "tipoId": "banqueta",
+      "qtd": 6
+     },
+     {
+      "tipoId": "mesa-bistro",
+      "qtd": 2
+     }
+    ]
+   },
+   {
+    "id": "c-04",
+    "codigo": "C-04",
+    "nome": "Camarim 04",
+    "grupo": "Camarim",
+    "itens": [
+     {
+      "tipoId": "sofa-camurca-2",
       "qtd": 3
      },
      {
@@ -167,44 +227,12 @@
       "qtd": 1
      },
      {
-      "tipoId": "lixeira-preta-pequena",
-      "qtd": 1
-     },
-     {
       "tipoId": "banqueta",
-      "qtd": 4
-     }
-    ]
-   },
-   {
-    "id": "c-04",
-    "codigo": "C-04",
-    "nome": "Camarim 04",
-    "grupo": "Camarim",
-    "itens": [
-     {
-      "tipoId": "sofa-camurca-2",
-      "qtd": 3
+      "qtd": 6
      },
      {
-      "tipoId": "banqueta",
-      "qtd": 9
-     },
-     {
-      "tipoId": "espelho-grande",
-      "qtd": 1
-     },
-     {
-      "tipoId": "lixeira-inox",
-      "qtd": 1
-     },
-     {
-      "tipoId": "lixeira-preta-pequena",
-      "qtd": 1
-     },
-     {
-      "tipoId": "mesa-centro-preta-inox",
-      "qtd": 1
+      "tipoId": "mesa-bistro",
+      "qtd": 2
      }
     ]
    },
@@ -215,16 +243,16 @@
     "grupo": "Camarim",
     "itens": [
      {
-      "tipoId": "mesa-bistro",
-      "qtd": 3
+      "tipoId": "lixeira-inox",
+      "qtd": 1
      },
      {
       "tipoId": "banqueta",
-      "qtd": 12
+      "qtd": 6
      },
      {
-      "tipoId": "lixeira-inox",
-      "qtd": 1
+      "tipoId": "mesa-bistro",
+      "qtd": 2
      }
     ]
    },
@@ -235,11 +263,23 @@
     "grupo": "Camarim",
     "itens": [
      {
-      "tipoId": "sofa-camurca-2",
+      "tipoId": "sofa-camurca-3",
       "qtd": 3
      },
      {
-      "tipoId": "mesa-preta-inox",
+      "tipoId": "mesa-centro-preta-inox",
+      "qtd": 1
+     },
+     {
+      "tipoId": "espelho-grande",
+      "qtd": 1
+     },
+     {
+      "tipoId": "arara",
+      "qtd": 1
+     },
+     {
+      "tipoId": "espelho-moldura-branca",
       "qtd": 1
      },
      {
@@ -247,16 +287,12 @@
       "qtd": 2
      },
      {
-      "tipoId": "espelho-grande",
+      "tipoId": "banqueta",
+      "qtd": 4
+     },
+     {
+      "tipoId": "mesa-bistro",
       "qtd": 1
-     },
-     {
-      "tipoId": "mesa-centro-preta-inox",
-      "qtd": 2
-     },
-     {
-      "tipoId": "planta",
-      "qtd": 2
      }
     ]
    },
@@ -267,20 +303,12 @@
     "grupo": "Produção",
     "itens": [
      {
-      "tipoId": "cadeira-azul",
-      "qtd": 8
-     },
-     {
-      "tipoId": "sofa-preto-3",
-      "qtd": 1
-     },
-     {
       "tipoId": "mesa-branca",
       "qtd": 2
      },
      {
-      "tipoId": "lixeira-sunset",
-      "qtd": 1
+      "tipoId": "cadeira-azul",
+      "qtd": 8
      }
     ]
    },
@@ -291,19 +319,11 @@
     "grupo": "Produção",
     "itens": [
      {
-      "tipoId": "mesa-branca",
-      "qtd": 1
-     },
-     {
       "tipoId": "cadeira-azul",
       "qtd": 4
      },
      {
-      "tipoId": "cadeira-preta",
-      "qtd": 5
-     },
-     {
-      "tipoId": "banqueta",
+      "tipoId": "mesa-branca",
       "qtd": 1
      }
     ]
@@ -315,12 +335,12 @@
     "grupo": "Produção",
     "itens": [
      {
-      "tipoId": "mesa-branca",
-      "qtd": 1
+      "tipoId": "cadeira-azul",
+      "qtd": 10
      },
      {
-      "tipoId": "cadeira-azul",
-      "qtd": 5
+      "tipoId": "mesa-branca",
+      "qtd": 3
      }
     ]
    },
@@ -331,15 +351,15 @@
     "grupo": "Produção",
     "itens": [
      {
-      "tipoId": "mesa-branca",
+      "tipoId": "aparador-marrom",
       "qtd": 1
      },
      {
       "tipoId": "cadeira-azul",
-      "qtd": 2
+      "qtd": 4
      },
      {
-      "tipoId": "armario-chao-escritorio",
+      "tipoId": "mesa-branca",
       "qtd": 1
      }
     ]
@@ -351,23 +371,19 @@
     "grupo": "Produção",
     "itens": [
      {
-      "tipoId": "cadeira-azul",
+      "tipoId": "mesa-branca",
       "qtd": 2
      },
      {
-      "tipoId": "mesa-quadrada-preta",
+      "tipoId": "sofa-preto-1",
       "qtd": 2
      },
      {
-      "tipoId": "sofa-camurca-2",
+      "tipoId": "sofa-preto-2",
       "qtd": 1
      },
      {
-      "tipoId": "mesa-branca-grande",
-      "qtd": 2
-     },
-     {
-      "tipoId": "lixeira-preta-pequena",
+      "tipoId": "armario-pequeno-escritorio",
       "qtd": 1
      }
     ]
@@ -379,19 +395,15 @@
     "grupo": "Produção",
     "itens": [
      {
+      "tipoId": "mesa-branca",
+      "qtd": 1
+     },
+     {
       "tipoId": "cadeira-azul",
-      "qtd": 3
+      "qtd": 6
      },
      {
-      "tipoId": "banqueta",
-      "qtd": 3
-     },
-     {
-      "tipoId": "mesa-bistro",
-      "qtd": 2
-     },
-     {
-      "tipoId": "sofa-preto-3",
+      "tipoId": "sofa-preto-2",
       "qtd": 1
      }
     ]
@@ -403,19 +415,19 @@
     "grupo": "Produção",
     "itens": [
      {
-      "tipoId": "sofa-preto-3",
+      "tipoId": "mesa-pranchao-marrom",
       "qtd": 1
      },
      {
       "tipoId": "mesa-branca",
-      "qtd": 4
+      "qtd": 1
      },
      {
       "tipoId": "cadeira-azul",
-      "qtd": 7
+      "qtd": 6
      },
      {
-      "tipoId": "armario-pequeno-escritorio",
+      "tipoId": "sofa-preto-1",
       "qtd": 1
      },
      {
@@ -423,7 +435,11 @@
       "qtd": 1
      },
      {
-      "tipoId": "sofa-preto-1",
+      "tipoId": "sofa-preto-3",
+      "qtd": 1
+     },
+     {
+      "tipoId": "armario-pequeno-escritorio",
       "qtd": 1
      }
     ]

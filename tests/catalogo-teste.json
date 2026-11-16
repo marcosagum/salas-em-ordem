@@ -1,0 +1,434 @@
+{
+ "catalogo": {
+  "origem": "Relatório de Mobiliário das Salas, 08/10/2026",
+  "tipos": {
+   "arara": {
+    "id": "arara",
+    "nome": "Arara"
+   },
+   "armario-chao-escritorio": {
+    "id": "armario-chao-escritorio",
+    "nome": "Armário de chão escritório"
+   },
+   "armario-pequeno-escritorio": {
+    "id": "armario-pequeno-escritorio",
+    "nome": "Armário pequeno escritório"
+   },
+   "banqueta": {
+    "id": "banqueta",
+    "nome": "Banqueta"
+   },
+   "cadeira-azul": {
+    "id": "cadeira-azul",
+    "nome": "Cadeira azul"
+   },
+   "cadeira-preta": {
+    "id": "cadeira-preta",
+    "nome": "Cadeira preta"
+   },
+   "espelho-grande": {
+    "id": "espelho-grande",
+    "nome": "Espelho grande"
+   },
+   "lixeira-inox": {
+    "id": "lixeira-inox",
+    "nome": "Lixeira inox"
+   },
+   "lixeira-preta-pequena": {
+    "id": "lixeira-preta-pequena",
+    "nome": "Lixeira preta pequena"
+   },
+   "lixeira-sunset": {
+    "id": "lixeira-sunset",
+    "nome": "Lixeira sunset"
+   },
+   "mesa-bistro": {
+    "id": "mesa-bistro",
+    "nome": "Mesa bistrô"
+   },
+   "mesa-branca": {
+    "id": "mesa-branca",
+    "nome": "Mesa branca"
+   },
+   "mesa-branca-grande": {
+    "id": "mesa-branca-grande",
+    "nome": "Mesa branca grande"
+   },
+   "mesa-centro-preta-inox": {
+    "id": "mesa-centro-preta-inox",
+    "nome": "Mesa de centro preta com inox"
+   },
+   "mesa-preta-inox": {
+    "id": "mesa-preta-inox",
+    "nome": "Mesa preta com inox"
+   },
+   "mesa-quadrada-preta": {
+    "id": "mesa-quadrada-preta",
+    "nome": "Mesa quadrada preta"
+   },
+   "planta": {
+    "id": "planta",
+    "nome": "Planta"
+   },
+   "sofa-camurca-2": {
+    "id": "sofa-camurca-2",
+    "nome": "Sofá camurça 2 lugares"
+   },
+   "sofa-preto-1": {
+    "id": "sofa-preto-1",
+    "nome": "Sofá preto 1 lugar"
+   },
+   "sofa-preto-2": {
+    "id": "sofa-preto-2",
+    "nome": "Sofá preto 2 lugares"
+   },
+   "sofa-preto-3": {
+    "id": "sofa-preto-3",
+    "nome": "Sofá preto 3 lugares"
+   }
+  },
+  "salas": [
+   {
+    "id": "c-01",
+    "codigo": "C-01",
+    "nome": "Camarim 01",
+    "grupo": "Camarim",
+    "itens": [
+     {
+      "tipoId": "sofa-camurca-2",
+      "qtd": 3
+     },
+     {
+      "tipoId": "mesa-preta-inox",
+      "qtd": 1
+     },
+     {
+      "tipoId": "espelho-grande",
+      "qtd": 1
+     },
+     {
+      "tipoId": "mesa-centro-preta-inox",
+      "qtd": 1
+     },
+     {
+      "tipoId": "mesa-bistro",
+      "qtd": 1
+     },
+     {
+      "tipoId": "banqueta",
+      "qtd": 4
+     },
+     {
+      "tipoId": "planta",
+      "qtd": 2
+     },
+     {
+      "tipoId": "lixeira-inox",
+      "qtd": 1
+     }
+    ]
+   },
+   {
+    "id": "c-02",
+    "codigo": "C-02",
+    "nome": "Camarim 02",
+    "grupo": "Camarim",
+    "itens": [
+     {
+      "tipoId": "lixeira-inox",
+      "qtd": 1
+     }
+    ]
+   },
+   {
+    "id": "c-03",
+    "codigo": "C-03",
+    "nome": "Camarim 03",
+    "grupo": "Camarim",
+    "itens": [
+     {
+      "tipoId": "mesa-bistro",
+      "qtd": 2
+     },
+     {
+      "tipoId": "sofa-preto-2",
+      "qtd": 3
+     },
+     {
+      "tipoId": "espelho-grande",
+      "qtd": 1
+     },
+     {
+      "tipoId": "arara",
+      "qtd": 1
+     },
+     {
+      "tipoId": "lixeira-inox",
+      "qtd": 1
+     },
+     {
+      "tipoId": "lixeira-preta-pequena",
+      "qtd": 1
+     },
+     {
+      "tipoId": "banqueta",
+      "qtd": 4
+     }
+    ]
+   },
+   {
+    "id": "c-04",
+    "codigo": "C-04",
+    "nome": "Camarim 04",
+    "grupo": "Camarim",
+    "itens": [
+     {
+      "tipoId": "sofa-camurca-2",
+      "qtd": 3
+     },
+     {
+      "tipoId": "banqueta",
+      "qtd": 9
+     },
+     {
+      "tipoId": "espelho-grande",
+      "qtd": 1
+     },
+     {
+      "tipoId": "lixeira-inox",
+      "qtd": 1
+     },
+     {
+      "tipoId": "lixeira-preta-pequena",
+      "qtd": 1
+     },
+     {
+      "tipoId": "mesa-centro-preta-inox",
+      "qtd": 1
+     }
+    ]
+   },
+   {
+    "id": "c-05",
+    "codigo": "C-05",
+    "nome": "Camarim 05",
+    "grupo": "Camarim",
+    "itens": [
+     {
+      "tipoId": "mesa-bistro",
+      "qtd": 3
+     },
+     {
+      "tipoId": "banqueta",
+      "qtd": 12
+     },
+     {
+      "tipoId": "lixeira-inox",
+      "qtd": 1
+     }
+    ]
+   },
+   {
+    "id": "c-06",
+    "codigo": "C-06",
+    "nome": "Camarim 06",
+    "grupo": "Camarim",
+    "itens": [
+     {
+      "tipoId": "sofa-camurca-2",
+      "qtd": 3
+     },
+     {
+      "tipoId": "mesa-preta-inox",
+      "qtd": 1
+     },
+     {
+      "tipoId": "lixeira-inox",
+      "qtd": 2
+     },
+     {
+      "tipoId": "espelho-grande",
+      "qtd": 1
+     },
+     {
+      "tipoId": "mesa-centro-preta-inox",
+      "qtd": 2
+     },
+     {
+      "tipoId": "planta",
+      "qtd": 2
+     }
+    ]
+   },
+   {
+    "id": "t-06",
+    "codigo": "T-06",
+    "nome": "Sala de Produção T-06",
+    "grupo": "Produção",
+    "itens": [
+     {
+      "tipoId": "cadeira-azul",
+      "qtd": 8
+     },
+     {
+      "tipoId": "sofa-preto-3",
+      "qtd": 1
+     },
+     {
+      "tipoId": "mesa-branca",
+      "qtd": 2
+     },
+     {
+      "tipoId": "lixeira-sunset",
+      "qtd": 1
+     }
+    ]
+   },
+   {
+    "id": "t-07",
+    "codigo": "T-07",
+    "nome": "Sala de Produção T-07",
+    "grupo": "Produção",
+    "itens": [
+     {
+      "tipoId": "mesa-branca",
+      "qtd": 1
+     },
+     {
+      "tipoId": "cadeira-azul",
+      "qtd": 4
+     },
+     {
+      "tipoId": "cadeira-preta",
+      "qtd": 5
+     },
+     {
+      "tipoId": "banqueta",
+      "qtd": 1
+     }
+    ]
+   },
+   {
+    "id": "t-08",
+    "codigo": "T-08",
+    "nome": "Sala de Produção T-08",
+    "grupo": "Produção",
+    "itens": [
+     {
+      "tipoId": "mesa-branca",
+      "qtd": 1
+     },
+     {
+      "tipoId": "cadeira-azul",
+      "qtd": 5
+     }
+    ]
+   },
+   {
+    "id": "t-51",
+    "codigo": "T-51",
+    "nome": "Sala de Produção T-51",
+    "grupo": "Produção",
+    "itens": [
+     {
+      "tipoId": "mesa-branca",
+      "qtd": 1
+     },
+     {
+      "tipoId": "cadeira-azul",
+      "qtd": 2
+     },
+     {
+      "tipoId": "armario-chao-escritorio",
+      "qtd": 1
+     }
+    ]
+   },
+   {
+    "id": "t-52",
+    "codigo": "T-52",
+    "nome": "Sala de Produção T-52",
+    "grupo": "Produção",
+    "itens": [
+     {
+      "tipoId": "cadeira-azul",
+      "qtd": 2
+     },
+     {
+      "tipoId": "mesa-quadrada-preta",
+      "qtd": 2
+     },
+     {
+      "tipoId": "sofa-camurca-2",
+      "qtd": 1
+     },
+     {
+      "tipoId": "mesa-branca-grande",
+      "qtd": 2
+     },
+     {
+      "tipoId": "lixeira-preta-pequena",
+      "qtd": 1
+     }
+    ]
+   },
+   {
+    "id": "t-53",
+    "codigo": "T-53",
+    "nome": "Sala de Produção T-53",
+    "grupo": "Produção",
+    "itens": [
+     {
+      "tipoId": "cadeira-azul",
+      "qtd": 3
+     },
+     {
+      "tipoId": "banqueta",
+      "qtd": 3
+     },
+     {
+      "tipoId": "mesa-bistro",
+      "qtd": 2
+     },
+     {
+      "tipoId": "sofa-preto-3",
+      "qtd": 1
+     }
+    ]
+   },
+   {
+    "id": "t-54",
+    "codigo": "T-54",
+    "nome": "Sala de Produção T-54",
+    "grupo": "Produção",
+    "itens": [
+     {
+      "tipoId": "sofa-preto-3",
+      "qtd": 1
+     },
+     {
+      "tipoId": "mesa-branca",
+      "qtd": 4
+     },
+     {
+      "tipoId": "cadeira-azul",
+      "qtd": 7
+     },
+     {
+      "tipoId": "armario-pequeno-escritorio",
+      "qtd": 1
+     },
+     {
+      "tipoId": "sofa-preto-2",
+      "qtd": 1
+     },
+     {
+      "tipoId": "sofa-preto-1",
+      "qtd": 1
+     }
+    ]
+   }
+  ]
+ },
+ "rearmes": {}
+}

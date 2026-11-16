@@ -47,8 +47,8 @@ async function pedir(metodo, url, corpo, cookie) {
     const d = (await pedir('GET', '/api/dados', undefined, adm)).d;
     check('papel administrador', d.papel === 'admin');
     check('13 salas', d.catalogo.salas.length === 13);
-    check('136 peças', d.catalogo.salas.reduce((a, s) => a + s.itens.reduce((b, i) => b + i.qtd, 0), 0) === 136);
-    check('21 itens', Object.keys(d.catalogo.tipos).length === 21);
+    check('137 peças', d.catalogo.salas.reduce((a, s) => a + s.itens.reduce((b, i) => b + i.qtd, 0), 0) === 137);
+    check('25 itens', Object.keys(d.catalogo.tipos).length === 25);
     check('papel equipe', (await pedir('GET', '/api/dados', undefined, eq)).d.papel === 'equipe');
     check('papel consulta', (await pedir('GET', '/api/dados', undefined, ver)).d.papel === 'consulta');
 
@@ -80,7 +80,7 @@ async function pedir(metodo, url, corpo, cookie) {
     const mb = await pedir('POST', '/api/tipos', { nome: 'mesa bistro' }, eq);
     check('nome sem acento acha o item que já existe', mb.status === 200 && mb.d.id === 'mesa-bistro', mb);
     check('conferência aceita o item novo', (await pedir('PUT', `/api/rearmes/${id}/salas/c-05`, { ...reg, contagem: { 'ring-light': 1 } }, eq)).status === 204);
-    check('agora são 22 itens', Object.keys((await pedir('GET', '/api/dados', undefined, eq)).d.catalogo.tipos).length === 22);
+    check('agora são 26 itens', Object.keys((await pedir('GET', '/api/dados', undefined, eq)).d.catalogo.tipos).length === 26);
     check('equipe apaga conferência', (await pedir('DELETE', `/api/rearmes/${id}/salas/c-05`, undefined, eq)).status === 204);
 
     console.log('\n4. Previsto das salas (só administrador)');
